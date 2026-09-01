@@ -1,0 +1,358 @@
+{
+  "lessons": [
+    {
+      "id": "les_pretraining",
+      "moduleId": "mod_llm_lifecycle", "courseId": "crs_llm_internals", "trackId": "trk_llm",
+      "title": "Pretraining",
+      "subtitle": "Where a model gets everything it knows",
+      "category": "llms", "difficulty": "HARD", "estimatedMinutes": 7, "order": 1,
+      "blocks": [
+        { "type": "paragraph", "text": "Pretraining is the phase where a language model reads an enormous corpus of text and learns, over and over, to predict the next token. It is by far the most expensive step and it is where essentially all the model's knowledge is acquired." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Self-supervised, not unsupervised", "body": "Nobody labels this data, yet every example has a correct answer: the token that genuinely came next. The supervision signal is manufactured from the text itself. That is what made it possible to train on trillions of tokens - no human labelling was ever required." },
+        { "type": "heading", "text": "What emerges from next-token prediction", "level": 2 },
+        { "type": "paragraph", "text": "To predict the next token well across a huge and varied corpus, a model must implicitly learn grammar, factual associations, translation between languages, code syntax, and something functionally resembling reasoning. None of it was an explicit training objective. It is all instrumental to the prediction task." },
+        { "type": "table", "headers": ["Property", "Typical scale"], "rows": [
+          ["Training data", "Trillions of tokens of text and code"],
+          ["Parameters", "Billions to hundreds of billions"],
+          ["Compute", "Thousands of GPUs running for weeks or months"],
+          ["Cost", "Millions of currency units for a frontier model"],
+          ["Repeats", "Often only one or two passes over the data"]
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "The knowledge cutoff", "body": "A pretrained model knows nothing about events after its data was collected, and cannot learn new facts by being told them in a conversation - the next conversation starts fresh. Retrieval exists precisely to bridge this gap." },
+        { "type": "question", "questionId": "q_llm_001" }
+      ],
+      "summaryPoints": [
+        "Pretraining learns next-token prediction over a vast corpus",
+        "It is self-supervised - the correct answer is the text itself",
+        "Knowledge is frozen at the data cutoff and cannot be updated by conversation"
+      ],
+      "quizQuestionIds": ["q_llm_001", "q_llm_002", "q_llm_003"]
+    },
+    {
+      "id": "les_finetuning",
+      "moduleId": "mod_llm_lifecycle", "courseId": "crs_llm_internals", "trackId": "trk_llm",
+      "title": "Fine-Tuning and Alignment",
+      "subtitle": "Turning a text predictor into an assistant",
+      "category": "llms", "difficulty": "HARD", "estimatedMinutes": 7, "order": 2,
+      "blocks": [
+        { "type": "paragraph", "text": "A freshly pretrained model is not an assistant. Ask it a question and it may well continue with more questions - because in its training data, a question is frequently followed by another question. Turning it into something helpful takes further training." },
+        { "type": "diagram", "title": "From raw model to assistant", "nodes": ["Pretraining: predict the next token", "Instruction tuning: follow requests", "Preference alignment: prefer helpful, honest, harmless answers", "A deployable assistant"], "caption": "Each stage is far cheaper than the one before it." },
+        { "type": "heading", "text": "Instruction tuning", "level": 2 },
+        { "type": "paragraph", "text": "The model is trained on curated instruction-and-response pairs, teaching it that a request should be answered rather than continued. This single change accounts for most of the difference between a raw model and one that feels usable." },
+        { "type": "heading", "text": "Preference alignment", "level": 2 },
+        { "type": "paragraph", "text": "Humans compare pairs of model responses and indicate which is better. Those preferences train the model toward the qualities people actually want. Reinforcement learning from human feedback was the original approach; direct preference optimisation achieves a similar result more simply." },
+        { "type": "table", "headers": ["Approach", "Cost", "What it changes"], "rows": [
+          ["Full fine-tuning", "High", "Every parameter"],
+          ["LoRA / adapters", "Low", "A small set of added parameters"],
+          ["Prompting", "None", "Nothing - only the input"]
+        ]},
+        { "type": "callout", "style": "TIP", "title": "LoRA made fine-tuning accessible", "body": "Low-rank adaptation freezes the original weights and trains a small number of additional parameters. It can cut trainable parameters by well over 99%, which is why fine-tuning a capable model became feasible on a single GPU." },
+        { "type": "question", "questionId": "q_llm_004" }
+      ],
+      "summaryPoints": [
+        "Instruction tuning teaches a model to answer rather than continue",
+        "Preference alignment shapes it toward helpful, honest, harmless responses",
+        "LoRA trains a tiny fraction of parameters and made fine-tuning widely affordable"
+      ],
+      "quizQuestionIds": ["q_llm_004", "q_llm_005", "q_llm_006"]
+    },
+    {
+      "id": "les_reasoning_models",
+      "moduleId": "mod_llm_lifecycle", "courseId": "crs_llm_internals", "trackId": "trk_llm",
+      "title": "Reasoning Models",
+      "subtitle": "Spending more compute at answer time",
+      "category": "llms", "difficulty": "HARD", "estimatedMinutes": 6, "order": 3,
+      "blocks": [
+        { "type": "paragraph", "text": "A standard language model spends a fixed amount of computation per token, whether the question is trivial or genuinely hard. Reasoning models break that constraint by working through a problem internally before responding." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Test-time compute", "body": "The insight is that you can improve results by thinking longer at answer time, not only by training a bigger model. A model that deliberates for thirty seconds on a hard problem can outperform a much larger model that answers instantly." },
+        { "type": "table", "headers": ["", "Standard model", "Reasoning model"], "rows": [
+          ["Latency", "Fast, roughly constant", "Variable, can be much slower"],
+          ["Cost per answer", "Predictable", "Higher, and depends on difficulty"],
+          ["Best at", "Retrieval, drafting, summarising, chat", "Maths, logic, multi-step planning, hard debugging"],
+          ["Worth using for", "Most everyday tasks", "Problems where a wrong answer is costly"]
+        ]},
+        { "type": "callout", "style": "TIP", "title": "Match the model to the problem", "body": "Using a reasoning model to reformat a paragraph wastes time and money. Using a fast model for a subtle multi-step proof produces a confident wrong answer. The skill is routing each request to the appropriate tier." },
+        { "type": "question", "questionId": "q_llm_007" }
+      ],
+      "summaryPoints": [
+        "Reasoning models deliberate before answering, spending more compute at inference",
+        "This trades latency and cost for accuracy on hard problems",
+        "Route easy tasks to fast models and hard ones to reasoning models"
+      ],
+      "quizQuestionIds": ["q_llm_007", "q_llm_008"]
+    },
+    {
+      "id": "les_model_families",
+      "moduleId": "mod_llm_families", "courseId": "crs_llm_internals", "trackId": "trk_llm",
+      "title": "How Model Families Differ",
+      "subtitle": "Concepts, not marketing",
+      "category": "llms", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 4,
+      "blocks": [
+        { "type": "paragraph", "text": "There are many model families - GPT-style, Claude-style, Gemini-style, Llama-style and others. Rather than tracking a leaderboard that changes monthly, it is more durable to understand the axes along which they genuinely differ." },
+        { "type": "table", "headers": ["Axis", "What varies", "Why it matters to you"], "rows": [
+          ["Weight availability", "Open-weight vs API-only", "Self-hosting, data residency, offline use"],
+          ["Context length", "Thousands to millions of tokens", "How much material fits in one request"],
+          ["Modality", "Text-only vs vision, audio, video", "Whether it can read a chart or a screenshot"],
+          ["Reasoning depth", "Fast responders vs deliberating models", "Accuracy on multi-step problems"],
+          ["Size", "A few billion to hundreds of billions of parameters", "Cost, latency, and whether it runs on-device"],
+          ["Alignment style", "Different refusal and tone behaviour", "How it handles sensitive or ambiguous requests"]
+        ]},
+        { "type": "heading", "text": "Open-weight versus API", "level": 2 },
+        { "type": "bullets", "items": [
+          "Open-weight - you download the parameters, run them anywhere, and modify them. You also bear the infrastructure",
+          "API-only - someone else runs it. Simpler and usually more capable at the frontier, but your data leaves your systems and you depend on their availability"
+        ]},
+        { "type": "callout", "style": "TIP", "title": "Evaluate on your own task", "body": "Public benchmarks are a weak proxy for your specific workload, and are increasingly contaminated by appearing in training data. Build a small evaluation set from your real inputs. Twenty representative cases will tell you more than any leaderboard." },
+        { "type": "question", "questionId": "q_llm_009" }
+      ],
+      "summaryPoints": [
+        "Models differ along weight availability, context, modality, reasoning depth and size",
+        "Open-weight offers control; API access offers convenience and frontier capability",
+        "Your own evaluation set beats public benchmarks for choosing a model"
+      ],
+      "quizQuestionIds": ["q_llm_009", "q_llm_010"]
+    },
+    {
+      "id": "les_small_models",
+      "moduleId": "mod_llm_families", "courseId": "crs_llm_internals", "trackId": "trk_llm",
+      "title": "Small Language Models",
+      "subtitle": "When smaller is the right answer",
+      "category": "llms", "difficulty": "MEDIUM", "estimatedMinutes": 5, "order": 5,
+      "blocks": [
+        { "type": "paragraph", "text": "Small language models - roughly 1 to 10 billion parameters - have improved enough that they now handle a large share of practical tasks, and they bring advantages a frontier model cannot match." },
+        { "type": "bullets", "items": [
+          "They run on a phone or laptop, so data never leaves the device",
+          "They work offline, with no network dependency",
+          "Latency is measured in milliseconds rather than seconds",
+          "Cost per request approaches zero once deployed",
+          "They can be fine-tuned cheaply for one narrow job"
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Capability is task-relative", "body": "For classifying a support ticket, extracting a date, or routing a request, a small fine-tuned model frequently matches a frontier model at a fraction of the cost and latency. Model size should follow task difficulty, not habit." },
+        { "type": "paragraph", "text": "The techniques that make them viable are distillation - training a small model to imitate a large one's outputs - and quantisation, which reduces numeric precision from 16 bits to 8 or 4, shrinking the model with modest quality loss." },
+        { "type": "question", "questionId": "q_llm_011" }
+      ],
+      "summaryPoints": [
+        "Small models enable on-device, offline, private and low-latency inference",
+        "For narrow tasks they often match much larger models",
+        "Distillation and quantisation are what make them practical"
+      ],
+      "quizQuestionIds": ["q_llm_011", "q_llm_012"]
+    },
+    {
+      "id": "les_what_is_rag",
+      "moduleId": "mod_rag_pipeline", "courseId": "crs_rag_pipeline", "trackId": "trk_rag",
+      "title": "What Is Retrieval Augmented Generation?",
+      "subtitle": "Giving a model knowledge it was never trained on",
+      "category": "rag", "difficulty": "HARD", "estimatedMinutes": 6, "order": 1,
+      "blocks": [
+        { "type": "paragraph", "text": "A model cannot answer questions about your company handbook, because your handbook was not in its training data. RAG solves this by retrieving relevant passages at question time and placing them in the prompt." },
+        { "type": "diagram", "title": "The RAG pipeline", "nodes": ["User question", "Embed the question", "Search the vector store", "Retrieve top passages", "Inject into the prompt as context", "Model answers from that context", "Answer with citations"], "caption": "The model reads supplied text rather than recalling from memory." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Open book, not bigger brain", "body": "RAG changes the task from 'recall this fact' to 'read this passage and answer'. That is a far easier and far more reliable request - and it is why RAG reduces hallucination so effectively." },
+        { "type": "table", "headers": ["", "Fine-tuning", "RAG"], "rows": [
+          ["Adds knowledge", "Unreliably", "Yes, directly"],
+          ["Updating facts", "Requires retraining", "Update the documents"],
+          ["Citations", "Not possible", "Natural - you know the source"],
+          ["Best for", "Style, format, tone", "Facts, documents, current information"]
+        ]},
+        { "type": "question", "questionId": "q_rag_001" }
+      ],
+      "summaryPoints": [
+        "RAG retrieves relevant text at query time and puts it in the prompt",
+        "It converts recall into reading comprehension, which is more reliable",
+        "Facts update by editing documents, and answers can carry citations"
+      ],
+      "quizQuestionIds": ["q_rag_001", "q_rag_002", "q_rag_003"]
+    },
+    {
+      "id": "les_chunking",
+      "moduleId": "mod_rag_pipeline", "courseId": "crs_rag_pipeline", "trackId": "trk_rag",
+      "title": "Chunking",
+      "subtitle": "The stage that quietly decides RAG quality",
+      "category": "rag", "difficulty": "HARD", "estimatedMinutes": 6, "order": 2,
+      "blocks": [
+        { "type": "paragraph", "text": "Documents must be split into passages before embedding. How you split them determines what can ever be retrieved - and it is the stage most often done carelessly." },
+        { "type": "table", "headers": ["Chunk size", "Trade-off"], "rows": [
+          ["Too small (under 100 tokens)", "Precise matching, but the answer's context is cut off"],
+          ["Balanced (200-600 tokens)", "Usually the right range for prose"],
+          ["Too large (over 1500 tokens)", "Embeddings blur across several topics and match poorly"]
+        ]},
+        { "type": "heading", "text": "Strategies", "level": 2 },
+        { "type": "bullets", "items": [
+          "Fixed-size - split every N tokens. Simple, and cuts sentences in half",
+          "Overlapping windows - repeat 10-20% between chunks so a fact spanning a boundary survives",
+          "Semantic - split at paragraph or section boundaries, respecting the document's own structure",
+          "Structural - split by heading, so each chunk is a complete topic"
+        ]},
+        { "type": "callout", "style": "TIP", "title": "Preserve context in metadata", "body": "A chunk reading 'It must be replaced every 6 months' is useless without knowing what 'it' is. Prepend the document title and section heading to each chunk before embedding, and keep the source reference as metadata for citation." },
+        { "type": "callout", "style": "WARNING", "title": "Poor chunking cannot be fixed downstream", "body": "If the answer was split across two chunks and neither is retrievable on its own, no amount of reranking or prompt engineering will recover it. When a RAG system underperforms, examine the chunks before blaming the model." },
+        { "type": "question", "questionId": "q_rag_004" }
+      ],
+      "summaryPoints": [
+        "Chunk size trades retrieval precision against sufficient context",
+        "Overlap and structural splitting stop answers being severed at boundaries",
+        "Prepend titles and headings so each chunk stands alone"
+      ],
+      "quizQuestionIds": ["q_rag_004", "q_rag_005", "q_rag_006"]
+    },
+    {
+      "id": "les_vector_databases",
+      "moduleId": "mod_rag_pipeline", "courseId": "crs_rag_pipeline", "trackId": "trk_rag",
+      "title": "Vector Databases and Semantic Search",
+      "subtitle": "Finding meaning at speed",
+      "category": "rag", "difficulty": "HARD", "estimatedMinutes": 6, "order": 3,
+      "blocks": [
+        { "type": "paragraph", "text": "Once every chunk is an embedding, answering a query means finding the nearest vectors to the query's embedding. Comparing against millions of vectors one at a time would be far too slow, so vector databases use approximate nearest neighbour indexes." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Approximate, deliberately", "body": "These indexes trade a tiny amount of recall for an enormous speed gain - searching millions of vectors in milliseconds by not examining most of them. Occasionally missing the true best match is an acceptable price, because the second-best is usually just as useful." },
+        { "type": "heading", "text": "Keyword search still matters", "level": 2 },
+        { "type": "paragraph", "text": "Semantic search understands meaning but can miss exact strings - a part number, an error code, a surname. Keyword search nails those and misses paraphrases. Hybrid search runs both and merges the rankings, and it outperforms either alone on most real corpora." },
+        { "type": "table", "headers": ["Query", "Semantic wins", "Keyword wins"], "rows": [
+          ["How do I get my account back?", "Yes - matches 'password recovery'", "No shared keywords"],
+          ["Error code E-4471", "Poor - the code has no semantic meaning", "Yes - exact match"],
+          ["Policy on remote work", "Yes - matches 'work from home guidance'", "Partial"]
+        ]},
+        { "type": "question", "questionId": "q_rag_007" }
+      ],
+      "summaryPoints": [
+        "Vector databases use approximate nearest neighbour search for speed",
+        "Semantic search finds meaning; keyword search finds exact strings",
+        "Hybrid search combining both usually beats either alone"
+      ],
+      "quizQuestionIds": ["q_rag_007", "q_rag_008"]
+    },
+    {
+      "id": "les_retrieval_reranking",
+      "moduleId": "mod_rag_pipeline", "courseId": "crs_rag_pipeline", "trackId": "trk_rag",
+      "title": "Reranking and Context Injection",
+      "subtitle": "The last mile of a RAG pipeline",
+      "category": "rag", "difficulty": "HARD", "estimatedMinutes": 6, "order": 4,
+      "blocks": [
+        { "type": "heading", "text": "Reranking", "level": 2 },
+        { "type": "paragraph", "text": "Vector search is fast but approximate. A common pattern is to retrieve a generous candidate set - say 50 passages - then use a slower, more accurate cross-encoder model to rescore them and keep the best 5." },
+        { "type": "paragraph", "text": "The difference is that a cross-encoder reads the query and the passage together rather than comparing two independently computed embeddings. That is much more accurate and much too slow to run over an entire corpus - which is exactly why it is used as a second pass over a shortlist." },
+        { "type": "heading", "text": "Injecting the context", "level": 2 },
+        { "type": "code", "language": "text", "caption": "A grounded answering prompt.", "code": "Answer the question using ONLY the context below.\n\nRules:\n- If the context does not contain the answer, reply exactly:\n  \"That is not covered in the available documents.\"\n- Cite the source id in square brackets after each claim.\n- Do not use outside knowledge, even if you are confident.\n\nContext:\n<<<\n[doc_14] Annual leave accrues at 2.5 days per completed month...\n[doc_27] Unused leave may be carried over up to a maximum of 5 days...\n>>>\n\nQuestion: How much leave can I carry into next year?" },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Give it permission to decline", "body": "The explicit 'not covered' escape hatch is the single most valuable line in a RAG prompt. Without it, a model asked a question its context cannot answer will fill the gap from memory - producing exactly the hallucination the whole pipeline existed to prevent." },
+        { "type": "callout", "style": "TIP", "title": "Evaluate the stages separately", "body": "When a RAG system gives a bad answer, first check whether the correct passage was retrieved at all. Retrieval failures and generation failures need completely different fixes, and conflating them wastes days." },
+        { "type": "question", "questionId": "q_rag_009" }
+      ],
+      "summaryPoints": [
+        "Retrieve broadly, then rerank with a slower cross-encoder for accuracy",
+        "Instruct the model to answer only from context and to say when it cannot",
+        "Diagnose retrieval and generation failures separately"
+      ],
+      "quizQuestionIds": ["q_rag_009", "q_rag_010", "q_rag_011"]
+    },
+    {
+      "id": "les_what_is_agent",
+      "moduleId": "mod_agents_core", "courseId": "crs_agents_foundations", "trackId": "trk_agents",
+      "title": "What Is an AI Agent?",
+      "subtitle": "From answering to acting",
+      "category": "ai_agents", "difficulty": "HARD", "estimatedMinutes": 6, "order": 1,
+      "blocks": [
+        { "type": "paragraph", "text": "A language model answers. An agent acts: given a goal, it decides what to do, uses tools to do it, observes what happened, and repeats until the goal is met or it gives up." },
+        { "type": "table", "headers": ["", "Plain model call", "Agent"], "rows": [
+          ["Input", "A prompt", "A goal"],
+          ["Steps", "One", "Many, decided at runtime"],
+          ["External access", "None", "Tools, APIs, files, search"],
+          ["Adaptation", "None", "Reacts to what each step returns"],
+          ["Predictability", "High", "Much lower - a genuine engineering concern"]
+        ]},
+        { "type": "heading", "text": "The four components", "level": 2 },
+        { "type": "bullets", "items": [
+          "Goal - what success looks like",
+          "Planning - decomposing the goal into achievable steps",
+          "Memory - retaining what has already been tried and learned",
+          "Tools - the actions it can actually take in the world"
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "Agents are not free capability", "body": "Every added step multiplies the chance of failure. If a single step succeeds 95% of the time, ten sequential steps succeed only about 60% of the time. Agents earn their complexity on genuinely open-ended tasks, and are a liability on tasks a single well-written prompt would solve." },
+        { "type": "question", "questionId": "q_agent_001" }
+      ],
+      "summaryPoints": [
+        "An agent pursues a goal through multiple self-directed steps with tools",
+        "Goal, planning, memory and tools are its four components",
+        "Error compounds across steps, so agents suit open-ended tasks only"
+      ],
+      "quizQuestionIds": ["q_agent_001", "q_agent_002", "q_agent_003"]
+    },
+    {
+      "id": "les_agent_loop",
+      "moduleId": "mod_agents_core", "courseId": "crs_agents_foundations", "trackId": "trk_agents",
+      "title": "The Reasoning Loop",
+      "subtitle": "Think, act, observe, repeat",
+      "category": "ai_agents", "difficulty": "HARD", "estimatedMinutes": 6, "order": 2,
+      "blocks": [
+        { "type": "diagram", "title": "The agent loop", "nodes": ["Thought: what should I do next?", "Action: call a tool", "Observation: read the result", "Goal met? If not, loop", "Final answer"], "caption": "Widely known as the ReAct pattern - reasoning interleaved with acting." },
+        { "type": "code", "language": "text", "caption": "A worked trace.", "code": "Goal: What was our best-selling product last quarter, and is it in stock?\n\nThought: I need sales data for the last quarter first.\nAction: query_database(\"SELECT product, SUM(qty) ... GROUP BY product\")\nObservation: Top result - 'Model X Headphones', 4,182 units\n\nThought: Now I need the current stock level for that product.\nAction: inventory_lookup(\"Model X Headphones\")\nObservation: 37 units in stock, reorder point is 200\n\nThought: I have both facts. Stock is well below the reorder point,\nwhich is worth flagging alongside the answer.\nFinal answer: Model X Headphones sold 4,182 units last quarter.\nOnly 37 remain in stock, below the reorder point of 200." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "The observation step is what makes it an agent", "body": "Without reading the result of each action, this would just be a fixed script. Reacting to what actually came back - including errors and surprises - is precisely what distinguishes an agent from a pipeline." },
+        { "type": "heading", "text": "Guardrails you always need", "level": 2 },
+        { "type": "bullets", "items": [
+          "A maximum step count, so a confused agent cannot loop forever",
+          "A cost or token budget, enforced outside the model",
+          "Timeouts on every individual tool call",
+          "Human approval before any irreversible action",
+          "Full logging of every thought, action and observation, for debugging"
+        ]},
+        { "type": "question", "questionId": "q_agent_004" }
+      ],
+      "summaryPoints": [
+        "The ReAct loop alternates reasoning, acting and observing",
+        "Reacting to real results is what separates an agent from a script",
+        "Step limits, budgets, timeouts and approval gates are mandatory"
+      ],
+      "quizQuestionIds": ["q_agent_004", "q_agent_005"]
+    },
+    {
+      "id": "les_agent_memory_tools",
+      "moduleId": "mod_agents_core", "courseId": "crs_agents_foundations", "trackId": "trk_agents",
+      "title": "Memory and Tools",
+      "subtitle": "What an agent remembers and what it can touch",
+      "category": "ai_agents", "difficulty": "HARD", "estimatedMinutes": 6, "order": 3,
+      "blocks": [
+        { "type": "heading", "text": "Memory", "level": 2 },
+        { "type": "table", "headers": ["Type", "Holds", "Lifetime"], "rows": [
+          ["Working memory", "The current loop's thoughts and observations", "One task"],
+          ["Short-term", "The conversation so far", "One session"],
+          ["Long-term", "Facts and preferences worth persisting", "Across sessions, usually in a vector store"]
+        ]},
+        { "type": "paragraph", "text": "Working memory fills quickly - each observation adds tokens. Real agents summarise older steps to stay within the context window, which introduces its own risk: summarising away the detail that later turns out to matter." },
+        { "type": "heading", "text": "Tools", "level": 2 },
+        { "type": "paragraph", "text": "A tool is a function the agent may call, described to the model in structured form: a name, a purpose, and a parameter schema. The model chooses which to call and with what arguments; your code executes it and returns the result." },
+        { "type": "code", "language": "json", "caption": "A tool definition.", "code": "{\n  \"name\": \"search_orders\",\n  \"description\": \"Find orders for a customer. Use when the user asks about order status, history or delivery.\",\n  \"parameters\": {\n    \"type\": \"object\",\n    \"properties\": {\n      \"customer_id\": { \"type\": \"string\", \"description\": \"Internal customer id\" },\n      \"status\": { \"type\": \"string\", \"enum\": [\"pending\", \"shipped\", \"delivered\"] },\n      \"limit\": { \"type\": \"integer\", \"description\": \"Max results, default 10\" }\n    },\n    \"required\": [\"customer_id\"]\n  }\n}" },
+        { "type": "callout", "style": "TIP", "title": "The description is the prompt", "body": "The model chooses tools based almost entirely on their descriptions. Saying when to use a tool - and when not to - improves selection more than any change to the agent's system prompt." },
+        { "type": "callout", "style": "WARNING", "title": "The agent's tools are its blast radius", "body": "An agent can do anything its tools permit. Give each tool the narrowest possible scope, enforce permissions in your code rather than in the prompt, and never expose a destructive operation without an explicit approval step. Treat every tool argument as untrusted input." },
+        { "type": "question", "questionId": "q_agent_006" }
+      ],
+      "summaryPoints": [
+        "Working, short-term and long-term memory serve different lifetimes",
+        "Tools are described by name, purpose and parameter schema",
+        "Tool scope defines the agent's blast radius - enforce limits in code"
+      ],
+      "quizQuestionIds": ["q_agent_006", "q_agent_007", "q_agent_008"]
+    },
+    {
+      "id": "les_multi_agent",
+      "moduleId": "mod_agents_core", "courseId": "crs_agents_foundations", "trackId": "trk_agents",
+      "title": "Multi-Agent Systems",
+      "subtitle": "When several agents beat one",
+      "category": "ai_agents", "difficulty": "HARD", "estimatedMinutes": 6, "order": 4,
+      "blocks": [
+        { "type": "paragraph", "text": "A multi-agent system splits work across several specialised agents, each with its own instructions and tools, coordinated by a defined pattern." },
+        { "type": "table", "headers": ["Pattern", "Structure", "Suits"], "rows": [
+          ["Supervisor", "One coordinator delegates to specialists", "Clearly separable subtasks"],
+          ["Pipeline", "Output of one feeds the next", "Fixed sequential stages"],
+          ["Debate", "Agents critique each other's answers", "Problems where errors are catchable by review"],
+          ["Parallel", "Several attempt the same task independently", "When you can vote on or merge results"]
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Specialisation is the benefit", "body": "A single agent handling research, writing and review needs one prompt covering all three, and it will do each adequately. Three focused agents each get a sharp, unambiguous brief - which is why the pattern works when it works." },
+        { "type": "callout", "style": "WARNING", "title": "Coordination is not free", "body": "Multi-agent systems multiply cost, latency and failure modes. Agents can loop passing work back and forth, or agree confidently on something wrong. Start with one agent; add a second only when you can name the specific failure it fixes." },
+        { "type": "question", "questionId": "q_agent_009" }
+      ],
+      "summaryPoints": [
+        "Supervisor, pipeline, debate and parallel are the common coordination patterns",
+        "The gain comes from each agent having a narrow, unambiguous brief",
+        "Coordination adds cost, latency and new failure modes - add agents deliberately"
+      ],
+      "quizQuestionIds": ["q_agent_009", "q_agent_010"]
+    }
+  ]
+}

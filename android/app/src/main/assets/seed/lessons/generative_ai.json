@@ -1,0 +1,271 @@
+{
+  "lessons": [
+    {
+      "id": "les_what_is_genai",
+      "moduleId": "mod_genai_basics", "courseId": "crs_genai_foundations", "trackId": "trk_genai",
+      "title": "What Is Generative AI?",
+      "subtitle": "Models that produce rather than classify",
+      "category": "generative_ai", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 1,
+      "blocks": [
+        { "type": "paragraph", "text": "Most machine learning is discriminative: it takes an input and picks a label. Generative AI is different - it produces new content that resembles its training data without copying it." },
+        { "type": "table", "headers": ["", "Discriminative", "Generative"], "rows": [
+          ["Question asked", "Which class is this?", "What plausibly comes next?"],
+          ["Output", "A label or number", "Text, an image, audio, code"],
+          ["Example", "Is this email spam?", "Write a reply to this email"],
+          ["Evaluation", "Accuracy against known answers", "Much harder - there is no single right answer"]
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Prediction is generation", "body": "A language model is trained on one deceptively simple task: predict the next token. Do that well enough, at enough scale, and coherent essays, working code and step-by-step reasoning emerge as a side effect. Nothing in the training explicitly taught it to write an essay." },
+        { "type": "heading", "text": "Why evaluation is the hard part", "level": 2 },
+        { "type": "paragraph", "text": "A spam classifier is either right or wrong, so measuring it is straightforward. There is no equivalent for 'write a good summary'. The field relies on a patchwork of benchmarks, automated scoring by other models, and human preference ratings - all of which are proxies, and all of which can be gamed." },
+        { "type": "question", "questionId": "q_genai_001" }
+      ],
+      "summaryPoints": [
+        "Generative models produce new content; discriminative models assign labels",
+        "Next-token prediction at scale produces capabilities nobody trained for directly",
+        "Evaluating generative output is genuinely unsolved compared with classification"
+      ],
+      "quizQuestionIds": ["q_genai_001", "q_genai_002", "q_genai_003"]
+    },
+    {
+      "id": "les_foundation_models",
+      "moduleId": "mod_genai_basics", "courseId": "crs_genai_foundations", "trackId": "trk_genai",
+      "title": "Foundation Models",
+      "subtitle": "Train once, adapt many times",
+      "category": "generative_ai", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 2,
+      "blocks": [
+        { "type": "paragraph", "text": "A foundation model is trained once on an enormous general corpus, then adapted to many downstream tasks. This inverted the economics of AI: instead of every team training a model per task, most teams now adapt someone else's." },
+        { "type": "diagram", "title": "The foundation model pattern", "nodes": ["Pretrain once on broad data (very expensive)", "One general-purpose model", "Adapt cheaply: prompting, fine-tuning, retrieval", "Many specialised applications"], "caption": "The expensive step happens once and is amortised across everyone." },
+        { "type": "heading", "text": "Three ways to adapt one", "level": 2 },
+        { "type": "table", "headers": ["Method", "Cost", "Best for"], "rows": [
+          ["Prompting", "Near zero", "Most tasks - always try this first"],
+          ["Retrieval (RAG)", "Low", "Giving the model facts it does not have"],
+          ["Fine-tuning", "Moderate to high", "Teaching a consistent style, format or narrow skill"]
+        ]},
+        { "type": "callout", "style": "TIP", "title": "The order matters", "body": "Teams routinely jump to fine-tuning when a better prompt would have solved the problem in an afternoon. Work up the ladder: prompt first, add retrieval if the issue is missing knowledge, and fine-tune only when you need consistent behaviour that prompting cannot reliably produce." },
+        { "type": "callout", "style": "WARNING", "title": "Fine-tuning does not add facts reliably", "body": "A common and expensive misconception. Fine-tuning is effective at shaping form - tone, structure, output format. For injecting knowledge, retrieval is usually both cheaper and more accurate, and it lets you update the facts without retraining anything." },
+        { "type": "question", "questionId": "q_genai_004" }
+      ],
+      "summaryPoints": [
+        "Foundation models are pretrained broadly once, then adapted many times",
+        "Prompting, retrieval and fine-tuning are the three adaptation routes",
+        "Fine-tuning shapes behaviour; retrieval supplies knowledge"
+      ],
+      "quizQuestionIds": ["q_genai_004", "q_genai_005", "q_genai_006"]
+    },
+    {
+      "id": "les_tokens",
+      "moduleId": "mod_genai_basics", "courseId": "crs_genai_foundations", "trackId": "trk_genai",
+      "title": "Tokens and Tokenisation",
+      "subtitle": "The units a model actually reads",
+      "category": "generative_ai", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 3,
+      "blocks": [
+        { "type": "paragraph", "text": "Language models do not see words or letters. Text is first broken into tokens - subword fragments drawn from a fixed vocabulary, typically 30,000 to 200,000 entries." },
+        { "type": "table", "headers": ["Text", "Approximate tokens"], "rows": [
+          ["cat", "1 - common words are single tokens"],
+          ["unbelievable", "3 - un / believ / able"],
+          ["antidisestablishmentarianism", "7 or more"],
+          ["1234567", "Often several - digits split unpredictably"],
+          ["A typical English word", "About 1.3 tokens on average"]
+        ]},
+        { "type": "heading", "text": "Why subwords rather than words", "level": 2 },
+        { "type": "bullets", "items": [
+          "A whole-word vocabulary could never cover every name, typo and neologism",
+          "Subwords let a model handle words it has never seen by assembling known pieces",
+          "It keeps the vocabulary small enough to compute over efficiently"
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Tokenisation explains odd model behaviour", "body": "Ask a model to count the letters in a word and it often fails - it never saw letters, only tokens. Arithmetic errors have the same root: numbers fragment inconsistently, so '127' and '128' may have entirely different token shapes. These are not reasoning failures so much as artefacts of the input representation." },
+        { "type": "callout", "style": "TIP", "title": "Tokens are the billing unit", "body": "API pricing and context limits are counted in tokens, not words. English runs roughly 0.75 words per token; code and non-Latin scripts are usually less efficient, sometimes far less. Budget accordingly." },
+        { "type": "question", "questionId": "q_genai_007" }
+      ],
+      "summaryPoints": [
+        "Models read subword tokens, not words or characters",
+        "Subword vocabularies handle unseen words by composing known fragments",
+        "Character counting and arithmetic quirks trace back to tokenisation"
+      ],
+      "quizQuestionIds": ["q_genai_007", "q_genai_008", "q_genai_009"]
+    },
+    {
+      "id": "les_embeddings",
+      "moduleId": "mod_genai_basics", "courseId": "crs_genai_foundations", "trackId": "trk_genai",
+      "title": "Embeddings",
+      "subtitle": "Meaning as coordinates",
+      "category": "generative_ai", "difficulty": "MEDIUM", "estimatedMinutes": 7, "order": 4,
+      "blocks": [
+        { "type": "paragraph", "text": "An embedding is a list of numbers - typically several hundred to a few thousand - representing a piece of text as a point in high-dimensional space. Texts with similar meaning land near each other." },
+        { "type": "paragraph", "text": "This is what makes semantic search possible. Searching for 'how do I reset my password' can retrieve a document titled 'Recovering account access' even with no shared keywords, because the two sit close together in embedding space." },
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "Arithmetic on meaning", "body": "Early word embeddings showed that vector('king') - vector('man') + vector('woman') lands near vector('queen'). The model was never taught about gender or royalty - the relationships emerged from how the words are used. It was the first strong evidence that meaning could be captured geometrically." },
+        { "type": "code", "language": "python", "caption": "Cosine similarity compares meaning.", "code": "import numpy as np\n\ndef cosine_similarity(a, b):\n    # The angle between two vectors, ignoring their lengths.\n    # 1.0 = same direction, 0 = unrelated, -1 = opposite.\n    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))\n\nquery = embed('how do I reset my password')\ndocs = [embed(text) for text in knowledge_base]\n\nscores = [cosine_similarity(query, d) for d in docs]\nbest = np.argsort(scores)[::-1][:5]   # five most relevant documents" },
+        { "type": "callout", "style": "WARNING", "title": "Embeddings are not interchangeable", "body": "Vectors from two different embedding models are not comparable, even if they have the same dimensions - the coordinate systems are unrelated. Changing your embedding model means re-embedding your entire corpus." },
+        { "type": "question", "questionId": "q_genai_010" }
+      ],
+      "summaryPoints": [
+        "Embeddings place text in a space where distance reflects similarity of meaning",
+        "Cosine similarity is the standard comparison measure",
+        "Vectors from different embedding models cannot be mixed"
+      ],
+      "quizQuestionIds": ["q_genai_010", "q_genai_011", "q_genai_012"]
+    },
+    {
+      "id": "les_context_windows",
+      "moduleId": "mod_genai_basics", "courseId": "crs_genai_foundations", "trackId": "trk_genai",
+      "title": "Context Windows",
+      "subtitle": "The model's entire working memory",
+      "category": "generative_ai", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 5,
+      "blocks": [
+        { "type": "paragraph", "text": "The context window is the maximum number of tokens a model can consider at once. It holds the system prompt, the conversation so far, any retrieved documents, and the response being generated - everything, all together." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "There is no memory outside the window", "body": "A model does not remember previous conversations. Every apparent memory is text that was re-sent in the current request. When a chat 'forgets' something from earlier, the usual cause is that the earlier turns were trimmed to fit." },
+        { "type": "heading", "text": "Budgeting the window", "level": 2 },
+        { "type": "bullets", "items": [
+          "System prompt - instructions and persona, present in every request",
+          "Conversation history - grows with every turn",
+          "Retrieved context - documents fetched by a RAG pipeline",
+          "The response - output consumes the same budget as input"
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "Bigger is not automatically better", "body": "Models often attend less reliably to material buried in the middle of a very long context - the 'lost in the middle' effect. A carefully retrieved 4,000-token context frequently outperforms 100,000 tokens of loosely relevant material, and costs a fraction as much." },
+        { "type": "paragraph", "text": "This is why retrieval remains valuable even as context windows grow. Selecting the right 2% of a corpus beats pasting in all of it - on accuracy, latency and cost simultaneously." },
+        { "type": "question", "questionId": "q_genai_013" }
+      ],
+      "summaryPoints": [
+        "The context window holds prompt, history, retrieved text and the response together",
+        "Models have no memory beyond what is re-sent in the current request",
+        "Well-targeted short context often beats a very long one"
+      ],
+      "quizQuestionIds": ["q_genai_013", "q_genai_014", "q_genai_015"]
+    },
+    {
+      "id": "les_decoding_controls",
+      "moduleId": "mod_genai_controls", "courseId": "crs_genai_foundations", "trackId": "trk_genai",
+      "title": "Temperature, Top-P and System Prompts",
+      "subtitle": "The knobs that shape every response",
+      "category": "generative_ai", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 6,
+      "blocks": [
+        { "type": "paragraph", "text": "At each step a model produces a probability for every token in its vocabulary. Decoding parameters decide how that distribution turns into an actual choice." },
+        { "type": "table", "headers": ["Setting", "Effect", "Use when"], "rows": [
+          ["Temperature 0", "Always take the most likely token", "Extraction, classification, anything needing reproducibility"],
+          ["Temperature 0.3-0.7", "Mild randomness", "General assistant use"],
+          ["Temperature 1.0+", "Flattens the distribution considerably", "Brainstorming, creative variation"],
+          ["Top-p 0.9", "Sample only from the most likely tokens covering 90% of probability", "A safer alternative to raising temperature"],
+          ["Max tokens", "Hard cap on response length", "Controlling cost and latency"]
+        ]},
+        { "type": "callout", "style": "TIP", "title": "Prefer top-p for controlled variety", "body": "High temperature makes every token more likely, including genuinely bad ones. Top-p keeps the tail cut off while still allowing variation among plausible options - usually a better trade. Adjust one or the other, not both at once." },
+        { "type": "heading", "text": "System prompts", "level": 2 },
+        { "type": "paragraph", "text": "The system prompt sets standing instructions - role, tone, constraints, output format - that persist across the conversation. It is the most reliable place to put rules you want followed consistently, because it is not competing with user text for attention." },
+        { "type": "callout", "style": "WARNING", "title": "A system prompt is not a security boundary", "body": "Instructions there can be overridden by sufficiently determined user input. Never put secrets, credentials or the only enforcement of an access rule in a system prompt. Real authorisation belongs in code the model cannot influence - see the AI Security track." },
+        { "type": "question", "questionId": "q_genai_016" }
+      ],
+      "summaryPoints": [
+        "Temperature and top-p control how randomly tokens are chosen",
+        "Temperature 0 for reproducible tasks; top-p for controlled creativity",
+        "System prompts set persistent behaviour but are not a security control"
+      ],
+      "quizQuestionIds": ["q_genai_016", "q_genai_017", "q_genai_018"]
+    },
+    {
+      "id": "les_hallucinations",
+      "moduleId": "mod_genai_controls", "courseId": "crs_genai_foundations", "trackId": "trk_genai",
+      "title": "Hallucinations",
+      "subtitle": "Why models invent things, and what helps",
+      "category": "generative_ai", "difficulty": "MEDIUM", "estimatedMinutes": 7, "order": 7,
+      "blocks": [
+        { "type": "paragraph", "text": "A hallucination is confident, fluent output that is simply false - a fabricated citation, an invented API method, a plausible statistic with no source." },
+        { "type": "heading", "text": "Why it happens", "level": 2 },
+        { "type": "paragraph", "text": "The model is trained to produce likely continuations, not true ones. A fabricated citation in the correct format is statistically an excellent continuation of 'According to a 2019 study,' - it looks exactly like the training data. Nothing in the objective distinguishes plausible from accurate." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "There is no internal fact-checker", "body": "The model has no separate store of verified knowledge to consult, and no representation of its own uncertainty that survives to the output. Truth and fluent invention are produced by exactly the same process, which is why the two are indistinguishable from tone alone." },
+        { "type": "heading", "text": "What actually reduces it", "level": 2 },
+        { "type": "table", "headers": ["Technique", "Why it helps"], "rows": [
+          ["Retrieval (RAG)", "Supplies real source text so the model quotes rather than recalls"],
+          ["Require citations", "Makes claims checkable, and unsupported ones visible"],
+          ["Lower temperature", "Reduces improvisation on factual tasks"],
+          ["Explicitly permit 'I don't know'", "Removes the pressure to produce an answer regardless"],
+          ["Constrain scope", "Answering only from provided context beats answering from memory"],
+          ["Verify externally", "Check API methods against real documentation, not the model"]
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "Asking the model to check itself is weak", "body": "'Are you sure?' often produces a confident reversal rather than a genuine re-examination - including changing a correct answer to a wrong one. Self-consistency across independent samples is somewhat better, but external verification against a real source is the only robust answer." },
+        { "type": "question", "questionId": "q_genai_019" }
+      ],
+      "summaryPoints": [
+        "Hallucination follows from optimising for plausibility rather than truth",
+        "Models have no internal fact-checker and no reliable sense of their own uncertainty",
+        "Retrieval, citations and external verification help; self-checking is weak"
+      ],
+      "quizQuestionIds": ["q_genai_019", "q_genai_020", "q_genai_021"]
+    },
+    {
+      "id": "les_image_generation",
+      "moduleId": "mod_genai_modalities", "courseId": "crs_genai_modalities", "trackId": "trk_genai",
+      "title": "Image Generation",
+      "subtitle": "Diffusion, from noise to picture",
+      "category": "generative_ai", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 8,
+      "blocks": [
+        { "type": "paragraph", "text": "Most current image generators are diffusion models. The training idea is elegant: take real images, add noise in gradual steps until they are pure static, and teach a network to reverse each step." },
+        { "type": "diagram", "title": "Generating an image", "nodes": ["Start from random noise", "Predict and remove some noise, guided by the text prompt", "Repeat 20-50 times", "A coherent image emerges"], "caption": "Generation is denoising something that was never an image to begin with." },
+        { "type": "paragraph", "text": "The text prompt steers the process. The prompt is embedded and used to condition each denoising step, so the noise resolves toward something matching the description rather than an arbitrary picture." },
+        { "type": "table", "headers": ["Approach", "Character"], "rows": [
+          ["GANs", "A generator and a critic compete; fast but unstable to train"],
+          ["Diffusion", "Iterative denoising; slower but far more controllable and higher quality"],
+          ["Autoregressive", "Generates image tokens in sequence, like a language model"]
+        ]},
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "Why hands were hard", "body": "Early image models struggled with hands because they are small, highly variable in pose, and each has a specific structure - five fingers, particular joints - that must be exactly right to look correct. Statistically plausible local texture is not enough when the global structure is so constrained." },
+        { "type": "question", "questionId": "q_genai_022" }
+      ],
+      "summaryPoints": [
+        "Diffusion models learn to reverse a noise-adding process",
+        "The text prompt conditions each denoising step",
+        "Diffusion largely displaced GANs on quality and controllability"
+      ],
+      "quizQuestionIds": ["q_genai_022", "q_genai_023"]
+    },
+    {
+      "id": "les_audio_video_generation",
+      "moduleId": "mod_genai_modalities", "courseId": "crs_genai_modalities", "trackId": "trk_genai",
+      "title": "Audio and Video Generation",
+      "subtitle": "Adding the time dimension",
+      "category": "generative_ai", "difficulty": "MEDIUM", "estimatedMinutes": 5, "order": 9,
+      "blocks": [
+        { "type": "heading", "text": "Audio", "level": 2 },
+        { "type": "bullets", "items": [
+          "Text-to-speech - converts written text into natural-sounding speech, now close to indistinguishable from a recording",
+          "Voice cloning - reproduces a specific voice from a short sample, which is precisely why it is an impersonation risk",
+          "Music generation - produces instrumental or vocal compositions from a description",
+          "Speech-to-text - the reverse direction, and the backbone of captioning and transcription"
+        ]},
+        { "type": "heading", "text": "Video", "level": 2 },
+        { "type": "paragraph", "text": "Video is substantially harder than images because it adds temporal consistency. An object must keep the same appearance across frames, lighting must stay coherent, and motion must obey enough physics to look right. Small per-frame errors compound into obvious flicker and morphing." },
+        { "type": "callout", "style": "WARNING", "title": "The deepfake problem is now practical", "body": "Convincing synthetic video and cloned voices are within reach of ordinary users. Verification therefore has to shift toward provenance - content credentials and signed capture - rather than relying on people spotting artefacts, because the artefacts are disappearing." },
+        { "type": "question", "questionId": "q_genai_024" }
+      ],
+      "summaryPoints": [
+        "Audio generation spans speech, voice cloning and music",
+        "Video is harder because it demands consistency across time",
+        "Detection by eye is failing; provenance and content credentials are the durable answer"
+      ],
+      "quizQuestionIds": ["q_genai_024", "q_genai_025"]
+    },
+    {
+      "id": "les_multimodal",
+      "moduleId": "mod_genai_modalities", "courseId": "crs_genai_modalities", "trackId": "trk_genai",
+      "title": "Multimodal AI",
+      "subtitle": "One model, several senses",
+      "category": "generative_ai", "difficulty": "MEDIUM", "estimatedMinutes": 5, "order": 10,
+      "blocks": [
+        { "type": "paragraph", "text": "A multimodal model handles more than one type of input or output - text and images, or text, images and audio together - within a single system." },
+        { "type": "paragraph", "text": "The technique is to project each modality into a shared representation space. An image becomes a sequence of embeddings that live alongside text embeddings, so the same Transformer can attend across both. The model does not have separate 'vision' and 'language' halves so much as one process reading a mixed stream." },
+        { "type": "bullets", "items": [
+          "Describe a photograph in words",
+          "Answer questions about a chart or diagram",
+          "Read handwriting and extract structured data from a form",
+          "Explain what is wrong in a screenshot of failing code",
+          "Generate an image from a written description"
+        ]},
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "Accessibility is a standout use", "body": "Multimodal models can describe photographs to blind and low-vision users in rich detail, on demand, for anything - not just images somebody remembered to caption. It is one of the clearest cases where the technology solves a real, longstanding problem." },
+        { "type": "question", "questionId": "q_genai_026" }
+      ],
+      "summaryPoints": [
+        "Multimodal models project different input types into one shared space",
+        "This lets a single Transformer reason across text and images together",
+        "Accessibility is among the most valuable practical applications"
+      ],
+      "quizQuestionIds": ["q_genai_026", "q_genai_027"]
+    }
+  ]
+}

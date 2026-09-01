@@ -1,0 +1,275 @@
+{
+  "lessons": [
+    {
+      "id": "les_neural_networks",
+      "moduleId": "mod_dl_neurons", "courseId": "crs_dl_networks", "trackId": "trk_dl",
+      "title": "Neural Networks and Artificial Neurons",
+      "subtitle": "What is actually inside a network",
+      "category": "deep_learning", "difficulty": "MEDIUM", "estimatedMinutes": 7, "order": 1,
+      "blocks": [
+        { "type": "paragraph", "text": "An artificial neuron is far simpler than the biological one that inspired it. It multiplies each input by a weight, adds them up, adds a bias, and passes the result through an activation function. That is the entire unit." },
+        { "type": "diagram", "title": "Inside one neuron", "nodes": ["Inputs x1, x2, x3", "Multiply by weights w1, w2, w3", "Sum and add bias b", "Activation function", "Output"], "caption": "Every network in this course is millions of copies of this." },
+        { "type": "heading", "text": "Weights and biases", "level": 2 },
+        { "type": "bullets", "items": [
+          "A weight says how much one input matters, and whether it pushes the output up or down",
+          "The bias shifts the output regardless of input, letting the neuron activate even when all inputs are zero",
+          "Together, weights and biases are the parameters that training adjusts"
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Why the activation function is essential", "body": "Without it, a neuron computes a weighted sum - a linear function. Stack a hundred linear layers and the whole network collapses mathematically into a single linear function, no more expressive than one layer. The non-linear activation is precisely what makes depth worth having." },
+        { "type": "paragraph", "text": "A single neuron can only draw a straight boundary. Arrange them in layers, with non-linearities between, and the network can approximate essentially any continuous function. That result - the universal approximation theorem - is why the architecture works." },
+        { "type": "question", "questionId": "q_dl_001" }
+      ],
+      "summaryPoints": [
+        "A neuron is a weighted sum plus a bias, passed through an activation function",
+        "Weights and biases are the learned parameters",
+        "Without non-linear activations, stacking layers adds no expressive power at all"
+      ],
+      "quizQuestionIds": ["q_dl_001", "q_dl_002", "q_dl_003"]
+    },
+    {
+      "id": "les_activation_functions",
+      "moduleId": "mod_dl_neurons", "courseId": "crs_dl_networks", "trackId": "trk_dl",
+      "title": "Activation Functions",
+      "subtitle": "The non-linearity that makes depth work",
+      "category": "deep_learning", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 2,
+      "blocks": [
+        { "type": "table", "headers": ["Function", "Output range", "Where it is used"], "rows": [
+          ["ReLU: max(0, x)", "0 to infinity", "The default for hidden layers"],
+          ["Sigmoid: 1/(1+e^-x)", "0 to 1", "Binary classification output"],
+          ["Tanh", "-1 to 1", "Older recurrent networks"],
+          ["Softmax", "0 to 1, summing to 1", "Multi-class classification output"],
+          ["GELU", "Roughly -0.17 to infinity", "Transformers and modern LLMs"]
+        ]},
+        { "type": "heading", "text": "Why ReLU took over", "level": 2 },
+        { "type": "paragraph", "text": "Sigmoid and tanh squash their inputs into a narrow band. In deep networks that squashing compounds: gradients shrink layer after layer until the early layers receive almost no learning signal. This is the vanishing gradient problem, and it kept networks shallow for years." },
+        { "type": "paragraph", "text": "ReLU's gradient is exactly 1 for any positive input. It does not shrink, so the signal reaches the early layers intact. It is also trivially cheap to compute - a single comparison. That combination is what made very deep networks trainable." },
+        { "type": "callout", "style": "WARNING", "title": "Dying ReLU", "body": "A neuron pushed permanently into negative territory outputs zero forever and its gradient is zero, so it can never recover - it is dead for the rest of training. Leaky ReLU fixes this by allowing a small negative slope instead of a hard zero." },
+        { "type": "callout", "style": "TIP", "title": "Practical defaults", "body": "Use ReLU (or GELU in Transformers) for hidden layers. Use sigmoid for a single binary output and softmax for multi-class. These defaults are correct often enough that deviating from them needs a specific reason." },
+        { "type": "question", "questionId": "q_dl_004" }
+      ],
+      "summaryPoints": [
+        "Activation functions introduce the non-linearity that makes depth meaningful",
+        "ReLU dominates hidden layers because its gradient does not vanish",
+        "Sigmoid handles binary outputs; softmax handles multi-class outputs"
+      ],
+      "quizQuestionIds": ["q_dl_004", "q_dl_005", "q_dl_006"]
+    },
+    {
+      "id": "les_layers",
+      "moduleId": "mod_dl_neurons", "courseId": "crs_dl_networks", "trackId": "trk_dl",
+      "title": "Input, Hidden and Output Layers",
+      "subtitle": "How networks build up abstraction",
+      "category": "deep_learning", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 3,
+      "blocks": [
+        { "type": "paragraph", "text": "A network is organised into layers. The input layer receives the raw features, hidden layers transform them, and the output layer produces the prediction." },
+        { "type": "diagram", "title": "Rising abstraction in a vision network", "nodes": ["Input: raw pixels", "Layer 1: edges and gradients", "Layer 2: corners and textures", "Layer 3: object parts - eyes, wheels", "Layer 4: whole objects", "Output: class probabilities"], "caption": "Nobody programmed this hierarchy. It emerges from training." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "This is the real breakthrough", "body": "Before deep learning, engineers hand-designed features - edge detectors, texture descriptors - and it took years per domain. Deep networks learn the feature hierarchy directly from raw data. That automation, not the raw accuracy, is what changed the field." },
+        { "type": "heading", "text": "Sizing the layers", "level": 2 },
+        { "type": "bullets", "items": [
+          "Input layer size is fixed by your data - one unit per feature",
+          "Output layer size is fixed by the task - one unit for regression, one per class for classification",
+          "Hidden layers are yours to choose, and are the main architectural decision"
+        ]},
+        { "type": "paragraph", "text": "'Deep' simply means many hidden layers. Depth generally helps because each layer composes the previous one's features into something more abstract - but past a point extra layers add cost without accuracy, and skip connections become necessary to keep gradients flowing." },
+        { "type": "question", "questionId": "q_dl_007" }
+      ],
+      "summaryPoints": [
+        "Layers build a hierarchy from simple features to abstract concepts",
+        "Input and output sizes are determined by the data and the task",
+        "Learning features automatically, rather than designing them by hand, is deep learning's key advantage"
+      ],
+      "quizQuestionIds": ["q_dl_007", "q_dl_008"]
+    },
+    {
+      "id": "les_loss_functions",
+      "moduleId": "mod_dl_training", "courseId": "crs_dl_networks", "trackId": "trk_dl",
+      "title": "Loss Functions",
+      "subtitle": "Telling the network how wrong it is",
+      "category": "deep_learning", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 4,
+      "blocks": [
+        { "type": "paragraph", "text": "A loss function converts the gap between prediction and truth into a single number. Training is nothing more than the search for parameters that make that number small." },
+        { "type": "table", "headers": ["Task", "Loss function", "Behaviour"], "rows": [
+          ["Regression", "Mean squared error", "Punishes large errors disproportionately"],
+          ["Regression with outliers", "Mean absolute error / Huber", "More tolerant of extreme values"],
+          ["Binary classification", "Binary cross-entropy", "Punishes confident wrong answers heavily"],
+          ["Multi-class classification", "Categorical cross-entropy", "The standard partner to softmax"]
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Cross-entropy punishes confidence", "body": "Cross-entropy does not just ask whether the answer was right - it asks how confidently it was wrong. Predicting the correct class with 51% certainty incurs a small penalty. Predicting the wrong class with 99% certainty incurs an enormous one. This is what teaches models to be appropriately uncertain." },
+        { "type": "paragraph", "text": "The loss function is also where you encode priorities. Weighting the loss so that missing a positive case costs ten times more than a false alarm pushes the whole model toward recall, without touching the architecture." },
+        { "type": "question", "questionId": "q_dl_009" }
+      ],
+      "summaryPoints": [
+        "The loss function turns error into one number for training to minimise",
+        "Cross-entropy penalises confident wrong answers far more than uncertain ones",
+        "Weighting the loss encodes which mistakes matter most"
+      ],
+      "quizQuestionIds": ["q_dl_009", "q_dl_010"]
+    },
+    {
+      "id": "les_gradient_descent",
+      "moduleId": "mod_dl_training", "courseId": "crs_dl_networks", "trackId": "trk_dl",
+      "title": "Gradient Descent",
+      "subtitle": "Walking downhill in a landscape you cannot see",
+      "category": "deep_learning", "difficulty": "MEDIUM", "estimatedMinutes": 7, "order": 5,
+      "blocks": [
+        { "type": "paragraph", "text": "Picture the loss as a landscape whose coordinates are the model's parameters and whose height is the error. Training means finding a low valley. Gradient descent does it by repeatedly measuring the local slope and stepping downhill." },
+        { "type": "bullets", "ordered": true, "items": [
+          "Compute the loss with the current parameters",
+          "Compute the gradient - the direction of steepest increase",
+          "Step in the opposite direction, scaled by the learning rate",
+          "Repeat"
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "The learning rate is the critical knob", "body": "Too large and you leap over the valley, bouncing between walls while the loss oscillates or explodes. Too small and training crawls, potentially settling in the first shallow dip it finds. More training runs fail on learning rate than on architecture." },
+        { "type": "heading", "text": "Three variants", "level": 2 },
+        { "type": "table", "headers": ["Variant", "Uses per step", "Character"], "rows": [
+          ["Batch", "The entire dataset", "Smooth but slow and memory-hungry"],
+          ["Stochastic (SGD)", "One example", "Fast, very noisy updates"],
+          ["Mini-batch", "32 to 512 examples", "The practical standard"]
+        ]},
+        { "type": "paragraph", "text": "Mini-batch wins because the noise is actually useful. A perfectly smooth descent settles into the nearest local minimum; a slightly noisy one can jump out of shallow dips and find something better. Modern optimisers such as Adam add momentum and per-parameter step sizes on top of this idea." },
+        { "type": "question", "questionId": "q_dl_011" }
+      ],
+      "summaryPoints": [
+        "Gradient descent repeatedly steps downhill on the loss surface",
+        "The learning rate controls step size and is the most failure-prone hyperparameter",
+        "Mini-batch is standard, and its noise helps escape poor local minima"
+      ],
+      "quizQuestionIds": ["q_dl_011", "q_dl_012", "q_dl_013"]
+    },
+    {
+      "id": "les_backpropagation",
+      "moduleId": "mod_dl_training", "courseId": "crs_dl_networks", "trackId": "trk_dl",
+      "title": "Backpropagation",
+      "subtitle": "Assigning blame across millions of parameters",
+      "category": "deep_learning", "difficulty": "HARD", "estimatedMinutes": 7, "order": 6,
+      "blocks": [
+        { "type": "paragraph", "text": "Gradient descent needs to know how each individual parameter contributed to the error. In a network with millions of weights spread across dozens of layers, computing that naively would be impossibly slow. Backpropagation makes it efficient." },
+        { "type": "diagram", "title": "One training step", "nodes": ["Forward pass: input flows to prediction", "Compute loss against the true answer", "Backward pass: error flows back through layers", "Each weight learns its share of the blame", "Update all weights at once"], "caption": "Forward to predict, backward to assign responsibility." },
+        { "type": "paragraph", "text": "The backward pass applies the chain rule from calculus. Starting at the output, it computes how much the loss would change for a small change in each weight, working layer by layer toward the input and reusing the calculations from the layer above at each step." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "The efficiency insight", "body": "Backpropagation computes the gradient for every parameter in roughly the cost of one forward pass, no matter how many parameters there are. Without that reuse, training a modern network would take longer than the age of the universe. This is the algorithm that makes deep learning possible at all." },
+        { "type": "heading", "text": "Where it goes wrong", "level": 2 },
+        { "type": "bullets", "items": [
+          "Vanishing gradients - repeated multiplication by small numbers leaves early layers with almost no signal",
+          "Exploding gradients - repeated multiplication by large numbers destabilises training; gradient clipping caps them",
+          "Both are why ReLU, careful initialisation and skip connections became standard"
+        ]},
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "You will rarely implement it", "body": "PyTorch and TensorFlow build a computation graph as your forward pass runs, then differentiate it automatically. One call to loss.backward() does all of this. Understanding the mechanism still matters, because when training misbehaves the diagnosis is almost always gradient-shaped." },
+        { "type": "question", "questionId": "q_dl_014" }
+      ],
+      "summaryPoints": [
+        "Backpropagation applies the chain rule backwards through the network",
+        "It computes every gradient in roughly the cost of one forward pass",
+        "Vanishing and exploding gradients are its main failure modes"
+      ],
+      "quizQuestionIds": ["q_dl_014", "q_dl_015", "q_dl_016"]
+    },
+    {
+      "id": "les_hyperparameters",
+      "moduleId": "mod_dl_training", "courseId": "crs_dl_networks", "trackId": "trk_dl",
+      "title": "Epochs, Batch Size and Learning Rate",
+      "subtitle": "The three knobs you will actually turn",
+      "category": "deep_learning", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 7,
+      "blocks": [
+        { "type": "table", "headers": ["Hyperparameter", "Definition", "Typical range"], "rows": [
+          ["Epoch", "One complete pass through the training data", "10 to 200, with early stopping"],
+          ["Batch size", "Examples processed before one weight update", "32 to 512"],
+          ["Learning rate", "How far each update moves the weights", "0.1 down to 0.00001"]
+        ]},
+        { "type": "paragraph", "text": "These three interact. Larger batches give smoother gradient estimates and usually tolerate a larger learning rate. Smaller batches are noisier, often regularise slightly, and generally need smaller steps." },
+        { "type": "callout", "style": "TIP", "title": "Tune the learning rate first", "body": "It has more influence on the outcome than any other hyperparameter. A common technique is the learning-rate range test: train briefly while increasing the rate exponentially, plot the loss, and pick a value slightly below where the loss starts to diverge." },
+        { "type": "code", "language": "python", "caption": "A typical PyTorch training loop.", "code": "import torch\n\noptimizer = torch.optim.AdamW(model.parameters(), lr=3e-4)\nscheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)\n\nbest_val, patience_left = float('inf'), 5\nfor epoch in range(epochs):\n    model.train()\n    for batch_x, batch_y in train_loader:   # one batch per step\n        optimizer.zero_grad()               # clear last step's gradients\n        loss = criterion(model(batch_x), batch_y)\n        loss.backward()                     # backpropagation\n        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)\n        optimizer.step()                    # apply the update\n    scheduler.step()\n\n    val_loss = evaluate(model, val_loader)\n    # Early stopping: keep the model from just before it starts memorising.\n    if val_loss < best_val:\n        best_val, patience_left = val_loss, 5\n        torch.save(model.state_dict(), 'best.pt')\n    else:\n        patience_left -= 1\n        if patience_left == 0:\n            break" },
+        { "type": "callout", "style": "WARNING", "title": "Forgetting zero_grad()", "body": "PyTorch accumulates gradients by default. Omit optimizer.zero_grad() and every step adds to the previous one, so updates grow without bound and training diverges for no visible reason. It is the classic first PyTorch bug." },
+        { "type": "question", "questionId": "q_dl_017" }
+      ],
+      "summaryPoints": [
+        "An epoch is one full pass; batch size sets how often weights update",
+        "Learning rate matters most - tune it before anything else",
+        "Early stopping and gradient clipping are cheap safeguards worth using by default"
+      ],
+      "quizQuestionIds": ["q_dl_017", "q_dl_018", "q_dl_019"]
+    },
+    {
+      "id": "les_cnn",
+      "moduleId": "mod_dl_architectures", "courseId": "crs_dl_architectures", "trackId": "trk_dl",
+      "title": "Convolutional Neural Networks",
+      "subtitle": "The architecture built for images",
+      "category": "deep_learning", "difficulty": "HARD", "estimatedMinutes": 7, "order": 8,
+      "blocks": [
+        { "type": "paragraph", "text": "Feeding an image into a standard fully connected network wastes almost everything about it. A modest 224x224 colour image has over 150,000 input values, and connecting each to even 1,000 neurons requires 150 million weights in the first layer alone - while ignoring the fact that neighbouring pixels are related." },
+        { "type": "heading", "text": "What convolution does differently", "level": 2 },
+        { "type": "paragraph", "text": "A convolutional layer slides a small filter - typically 3x3 - across the image, computing a value at each position. The same filter weights are reused everywhere, which is the crucial trick." },
+        { "type": "bullets", "items": [
+          "Parameter sharing - one 3x3 filter is 9 weights regardless of image size",
+          "Locality - each output depends only on a small neighbourhood, matching how images work",
+          "Translation invariance - a filter that detects an edge detects it anywhere in the frame"
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Why sharing is the whole idea", "body": "An edge in the top-left corner is the same visual pattern as an edge in the bottom-right. A fully connected network would have to learn it twice, from separate examples. A CNN learns it once and applies it everywhere - which is why CNNs need vastly less data to reach the same accuracy." },
+        { "type": "diagram", "title": "A typical CNN", "nodes": ["Convolution: detect features", "ReLU: add non-linearity", "Pooling: shrink and summarise", "Repeat several times", "Flatten", "Dense layers", "Class probabilities"], "caption": "Each convolution block detects progressively more abstract patterns." },
+        { "type": "paragraph", "text": "Pooling layers downsample - typically taking the maximum in each 2x2 region. This reduces computation and adds a little tolerance to small shifts, so an object moved a few pixels still activates the same features." },
+        { "type": "question", "questionId": "q_dl_020" }
+      ],
+      "summaryPoints": [
+        "CNNs slide small filters over an image, reusing the same weights everywhere",
+        "Parameter sharing makes them far more data- and compute-efficient than dense layers",
+        "Pooling downsamples and adds tolerance to small positional shifts"
+      ],
+      "quizQuestionIds": ["q_dl_020", "q_dl_021", "q_dl_022"]
+    },
+    {
+      "id": "les_rnn_lstm",
+      "moduleId": "mod_dl_architectures", "courseId": "crs_dl_architectures", "trackId": "trk_dl",
+      "title": "RNNs, LSTMs and GRUs",
+      "subtitle": "Networks with a memory",
+      "category": "deep_learning", "difficulty": "HARD", "estimatedMinutes": 7, "order": 9,
+      "blocks": [
+        { "type": "paragraph", "text": "Sequences - sentences, sensor readings, share prices - carry meaning in their order. A recurrent neural network processes one element at a time while maintaining a hidden state that carries information forward from everything it has already seen." },
+        { "type": "callout", "style": "WARNING", "title": "The long-range problem", "body": "In principle the hidden state remembers everything. In practice, gradients flowing back through many timesteps shrink toward zero, so a plain RNN effectively forgets anything more than a few steps back. In 'The cat, which had spent the afternoon asleep on the warm windowsill, was hungry', a plain RNN loses the link between 'cat' and 'was'." },
+        { "type": "heading", "text": "LSTM: gates that decide what to keep", "level": 2 },
+        { "type": "paragraph", "text": "A long short-term memory cell adds an explicit memory line running through the sequence, plus three learned gates that control it." },
+        { "type": "table", "headers": ["Gate", "Decides"], "rows": [
+          ["Forget gate", "What to discard from memory"],
+          ["Input gate", "What new information to store"],
+          ["Output gate", "What part of memory to expose right now"]
+        ]},
+        { "type": "paragraph", "text": "Because the memory line passes through with minimal transformation, gradients survive far longer. A GRU simplifies this to two gates - it trains faster with roughly comparable performance, and is often the better default when data is limited." },
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "Why Transformers replaced them", "body": "Recurrence is inherently sequential: step 50 cannot start until step 49 finishes, so training cannot be parallelised across the sequence. Transformers process every position simultaneously, which is what allowed models to grow to their current scale. RNNs remain useful for streaming and small-footprint settings." },
+        { "type": "question", "questionId": "q_dl_023" }
+      ],
+      "summaryPoints": [
+        "RNNs carry a hidden state through a sequence but forget long-range context",
+        "LSTMs add a memory line and three gates that learn what to keep and discard",
+        "Transformers displaced RNNs mainly because recurrence cannot be parallelised"
+      ],
+      "quizQuestionIds": ["q_dl_023", "q_dl_024", "q_dl_025"]
+    },
+    {
+      "id": "les_transformers",
+      "moduleId": "mod_dl_architectures", "courseId": "crs_dl_architectures", "trackId": "trk_dl",
+      "title": "The Transformer Architecture",
+      "subtitle": "Attention is all you need",
+      "category": "deep_learning", "difficulty": "HARD", "estimatedMinutes": 8, "order": 10,
+      "blocks": [
+        { "type": "paragraph", "text": "The Transformer, published in 2017, is the architecture underneath essentially every modern language model. Its central move was to abandon recurrence entirely and rely on attention instead." },
+        { "type": "heading", "text": "What attention computes", "level": 2 },
+        { "type": "paragraph", "text": "For every position in the sequence, attention asks: which other positions matter for understanding this one? It scores every pair of positions and combines them accordingly." },
+        { "type": "paragraph", "text": "Take 'The trophy would not fit in the suitcase because it was too big'. To resolve 'it', a model must connect it to 'trophy' rather than 'suitcase'. Attention lets the model look directly at both candidates and weight them - no information has to survive a long chain of recurrent steps." },
+        { "type": "diagram", "title": "A Transformer block", "nodes": ["Input embeddings", "Add positional encoding", "Multi-head self-attention", "Add and normalise", "Feed-forward network", "Add and normalise", "Repeat N times"], "caption": "GPT-scale models stack dozens to hundreds of these blocks." },
+        { "type": "heading", "text": "Three ideas that make it work", "level": 2 },
+        { "type": "bullets", "items": [
+          "Self-attention - every position can attend to every other in a single step, so distance costs nothing",
+          "Multi-head attention - several attention mechanisms run in parallel, each free to track a different kind of relationship such as syntax or coreference",
+          "Positional encoding - since attention alone is order-blind, position information is added explicitly to the embeddings"
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Parallelism is the real unlock", "body": "An RNN must process a 1,000-token sequence in 1,000 sequential steps. A Transformer processes all 1,000 positions at once. That is what made it practical to train on internet-scale text, and therefore what made large language models possible." },
+        { "type": "callout", "style": "WARNING", "title": "The quadratic cost", "body": "Comparing every position to every other means cost grows with the square of sequence length. Doubling the context window roughly quadruples the attention computation, which is exactly why long context windows are expensive and why efficient-attention research is such an active area." },
+        { "type": "question", "questionId": "q_dl_026" }
+      ],
+      "summaryPoints": [
+        "Transformers replaced recurrence with attention over all positions at once",
+        "Multi-head attention lets different heads track different relationships",
+        "Full parallelism enabled internet-scale training; quadratic cost is the price"
+      ],
+      "quizQuestionIds": ["q_dl_026", "q_dl_027", "q_dl_028"]
+    }
+  ]
+}

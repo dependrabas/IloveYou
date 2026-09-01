@@ -1,0 +1,214 @@
+{
+  "lessons": [
+    {
+      "id": "les_what_is_prompting",
+      "moduleId": "mod_prompt_basics", "courseId": "crs_prompt_foundations", "trackId": "trk_prompting",
+      "title": "What Is Prompting?",
+      "subtitle": "Programming in prose",
+      "category": "prompt_engineering", "difficulty": "EASY", "estimatedMinutes": 5, "order": 1,
+      "blocks": [
+        { "type": "paragraph", "text": "A prompt is the input you give a language model. Prompt engineering is the practice of writing that input so the model reliably produces what you actually need - not just something reasonable-looking." },
+        { "type": "paragraph", "text": "It matters because the model has no access to your intent. It sees text and continues it. Everything it needs to know - the goal, the audience, the format, the constraints - has to be present in what you wrote." },
+        { "type": "table", "headers": ["Vague prompt", "What you probably wanted"], "rows": [
+          ["Write about dogs", "A 200-word article for children about caring for a puppy"],
+          ["Fix this code", "Find the bug causing the crash and explain the fix"],
+          ["Summarise this", "Three bullet points a busy manager can read in 15 seconds"]
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Specificity beats cleverness", "body": "There are no magic words. The prompts that work are the ones that state the task, the audience, the format and the constraints plainly. Most 'prompt hacks' are just specificity in disguise." },
+        { "type": "question", "questionId": "q_prompt_001" }
+      ],
+      "summaryPoints": [
+        "The model only knows what the prompt tells it",
+        "Vague prompts produce generically plausible, rarely useful output",
+        "Specificity about task, audience, format and constraints is the whole skill"
+      ],
+      "quizQuestionIds": ["q_prompt_001", "q_prompt_002"]
+    },
+    {
+      "id": "les_prompt_structure",
+      "moduleId": "mod_prompt_basics", "courseId": "crs_prompt_foundations", "trackId": "trk_prompting",
+      "title": "The Anatomy of a Good Prompt",
+      "subtitle": "Five components, in order",
+      "category": "prompt_engineering", "difficulty": "EASY", "estimatedMinutes": 7, "order": 2,
+      "blocks": [
+        { "type": "paragraph", "text": "Effective prompts tend to share a structure. You will not need every component every time, but knowing them turns prompting from guesswork into a checklist." },
+        { "type": "diagram", "title": "Prompt components", "nodes": ["Role - who the model is acting as", "Context - the background it needs", "Instruction - the specific task", "Constraints - limits on the output", "Format - the exact shape of the answer"], "caption": "Instruction is mandatory; the rest earn their place as needed." },
+        { "type": "code", "language": "text", "caption": "The same request, unstructured and structured.", "code": "WEAK:\nSummarise this customer feedback.\n\nSTRONG:\nYou are a product analyst reviewing customer feedback.\n\nContext: These are support tickets from the last 30 days for our\nmobile banking app. The team wants to decide what to fix next quarter.\n\nTask: Identify the three most frequently reported problems.\n\nConstraints:\n- Base every claim only on the tickets provided\n- If a theme appears fewer than 3 times, exclude it\n- Do not propose solutions - identification only\n\nFormat: For each problem give a one-line title, the number of\nmentions, and one representative verbatim quote.\n\nTickets:\n<<<\n{tickets}\n>>>" },
+        { "type": "callout", "style": "TIP", "title": "Use delimiters for injected data", "body": "The triple angle brackets above matter. They mark where your data starts and stops, so the model does not mistake content inside a ticket for an instruction to follow. Any clear delimiter works - XML-style tags, triple backticks - as long as it is used consistently." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Say what to do, not what to avoid", "body": "'Do not be verbose' is weaker than 'Answer in at most three sentences'. Negative instructions require the model to infer the acceptable region; positive instructions describe it directly." },
+        { "type": "question", "questionId": "q_prompt_003" }
+      ],
+      "summaryPoints": [
+        "Role, context, instruction, constraints and format are the reusable components",
+        "Delimiters separate your data from your instructions",
+        "Positive instructions outperform prohibitions"
+      ],
+      "quizQuestionIds": ["q_prompt_003", "q_prompt_004", "q_prompt_005"]
+    },
+    {
+      "id": "les_role_and_context",
+      "moduleId": "mod_prompt_basics", "courseId": "crs_prompt_foundations", "trackId": "trk_prompting",
+      "title": "Role Prompting and Context",
+      "subtitle": "Setting the frame",
+      "category": "prompt_engineering", "difficulty": "EASY", "estimatedMinutes": 6, "order": 3,
+      "blocks": [
+        { "type": "paragraph", "text": "Assigning a role - 'You are an experienced paediatric nurse' - shifts vocabulary, depth and assumed audience. It is a compact way to communicate a great deal about the register you want." },
+        { "type": "callout", "style": "WARNING", "title": "A role is not expertise", "body": "Telling a model it is a doctor does not give it medical knowledge it lacks, and it does not make its answers safe to act on. Role prompting changes style and framing. It does not change what the model knows or how reliable it is." },
+        { "type": "heading", "text": "Context is usually the bigger lever", "level": 2 },
+        { "type": "paragraph", "text": "Roles are widely discussed; context does more work. Supplying the actual background - who the audience is, what has already been tried, what constraints exist - improves output far more than any persona." },
+        { "type": "table", "headers": ["Context to supply", "Example"], "rows": [
+          ["Audience", "Readers are first-year students with no programming background"],
+          ["Purpose", "This will go in a board pack, not a technical document"],
+          ["Prior attempts", "We already tried caching; it did not help"],
+          ["Constraints", "Must work on Android 7 and above"],
+          ["Definition of success", "A reader should be able to act on this without asking follow-ups"]
+        ]},
+        { "type": "question", "questionId": "q_prompt_006" }
+      ],
+      "summaryPoints": [
+        "Role prompting adjusts tone, vocabulary and assumed audience",
+        "It does not add knowledge or make output trustworthy",
+        "Concrete context about audience, purpose and constraints matters more"
+      ],
+      "quizQuestionIds": ["q_prompt_006", "q_prompt_007"]
+    },
+    {
+      "id": "les_shot_prompting",
+      "moduleId": "mod_prompt_basics", "courseId": "crs_prompt_foundations", "trackId": "trk_prompting",
+      "title": "Zero-Shot and Few-Shot Prompting",
+      "subtitle": "Teaching by example",
+      "category": "prompt_engineering", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 4,
+      "blocks": [
+        { "type": "table", "headers": ["Approach", "What you provide", "When to use"], "rows": [
+          ["Zero-shot", "Instructions only", "Common tasks the model already handles well"],
+          ["One-shot", "Instructions plus one example", "When the output format needs demonstrating"],
+          ["Few-shot", "Instructions plus 2-5 examples", "Unusual formats, subtle distinctions, consistent labelling"]
+        ]},
+        { "type": "paragraph", "text": "Few-shot prompting works because examples communicate things that are tedious to describe. Showing three correctly formatted outputs conveys the spacing, the tone and the level of detail more precisely than a paragraph of specification." },
+        { "type": "code", "language": "text", "caption": "Few-shot for a nuanced classification.", "code": "Classify each support message by urgency.\n\nMessage: \"App crashes every time I open it\"\nUrgency: HIGH\nReason: Complete loss of function\n\nMessage: \"Would be nice to have dark mode\"\nUrgency: LOW\nReason: Feature request, no impairment\n\nMessage: \"Payment went through twice\"\nUrgency: HIGH\nReason: Financial impact requiring reversal\n\nMessage: \"The font on the settings page looks slightly off\"\nUrgency: LOW\nReason: Cosmetic, no functional impact\n\nMessage: \"Cannot log in since this morning's update\"\nUrgency:" },
+        { "type": "callout", "style": "TIP", "title": "Cover the edges, not the obvious", "body": "The most valuable examples are the ambiguous ones. Two examples covering the boundary between HIGH and LOW teach far more than five obvious cases. If a distinction is subtle, demonstrate it explicitly." },
+        { "type": "callout", "style": "WARNING", "title": "Examples carry bias", "body": "If every example you provide happens to be HIGH urgency, the model will over-predict HIGH. Balance your examples across the classes you expect, or you will bake a skew into every output." },
+        { "type": "question", "questionId": "q_prompt_008" }
+      ],
+      "summaryPoints": [
+        "Zero-shot uses instructions alone; few-shot adds demonstrations",
+        "Examples convey format and nuance more precisely than description",
+        "Cover ambiguous boundary cases, and keep examples balanced across classes"
+      ],
+      "quizQuestionIds": ["q_prompt_008", "q_prompt_009", "q_prompt_010"]
+    },
+    {
+      "id": "les_structured_outputs",
+      "moduleId": "mod_prompt_advanced", "courseId": "crs_prompt_advanced", "trackId": "trk_prompting",
+      "title": "Structured Outputs",
+      "subtitle": "Making output that software can consume",
+      "category": "prompt_engineering", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 5,
+      "blocks": [
+        { "type": "paragraph", "text": "When a model's output feeds another program rather than a person, free-form prose is a liability. You need a predictable structure that parses every time." },
+        { "type": "code", "language": "text", "caption": "Specify the schema explicitly.", "code": "Extract the details of this event.\n\nReturn ONLY valid JSON matching this schema, with no surrounding\ntext, explanation or markdown fences:\n\n{\n  \"title\": string,\n  \"date\": string (ISO 8601, YYYY-MM-DD),\n  \"location\": string | null,\n  \"attendee_count\": integer | null,\n  \"confidence\": \"high\" | \"medium\" | \"low\"\n}\n\nIf a field is not stated in the text, use null. Do not guess.\n\nText:\n<<<\n{input_text}\n>>>" },
+        { "type": "bullets", "items": [
+          "State the schema, including types and which fields may be null",
+          "Say 'return only JSON' - models otherwise wrap it in prose or code fences",
+          "Give an explicit rule for missing data, or the model will invent values",
+          "Use the API's native structured-output or tool-calling mode when available - it enforces the schema rather than requesting it"
+        ]},
+        { "type": "callout", "style": "TIP", "title": "Always parse defensively", "body": "Even with a perfect prompt, wrap parsing in error handling. Strip stray code fences, and have a fallback for a malformed response. A pipeline that crashes on one bad parse is a pipeline that will page you at 3am." },
+        { "type": "question", "questionId": "q_prompt_011" }
+      ],
+      "summaryPoints": [
+        "Specify the exact schema, types and null-handling rules",
+        "Native structured-output modes enforce the schema rather than asking for it",
+        "Parse defensively regardless - responses will occasionally be malformed"
+      ],
+      "quizQuestionIds": ["q_prompt_011", "q_prompt_012"]
+    },
+    {
+      "id": "les_prompt_chaining",
+      "moduleId": "mod_prompt_advanced", "courseId": "crs_prompt_advanced", "trackId": "trk_prompting",
+      "title": "Prompt Chaining",
+      "subtitle": "Breaking one hard task into several easy ones",
+      "category": "prompt_engineering", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 6,
+      "blocks": [
+        { "type": "paragraph", "text": "A prompt asking for six things at once usually does all six mediocrely. Chaining splits the work into steps, feeding each output into the next prompt." },
+        { "type": "diagram", "title": "A review-analysis chain", "nodes": ["Step 1: Extract every complaint", "Step 2: Group complaints into themes", "Step 3: Rank themes by frequency and severity", "Step 4: Draft recommendations for the top three"], "caption": "Each step is simple enough to verify before the next runs." },
+        { "type": "heading", "text": "Why it works better", "level": 2 },
+        { "type": "bullets", "items": [
+          "Each step has one clear objective, so instructions stay unambiguous",
+          "Intermediate output is inspectable, so you can see exactly where quality broke",
+          "Steps can use different settings - extraction at temperature 0, drafting warmer",
+          "Individual steps can be retried without redoing the whole pipeline"
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "Errors compound", "body": "The trade-off is that a mistake in step 1 propagates through everything downstream. Validate between steps - a schema check or a sanity assertion - rather than assuming each stage succeeded." },
+        { "type": "question", "questionId": "q_prompt_013" }
+      ],
+      "summaryPoints": [
+        "Chaining splits a complex task into single-purpose steps",
+        "Intermediate results are inspectable and independently retryable",
+        "Validate between steps, because early errors propagate"
+      ],
+      "quizQuestionIds": ["q_prompt_013", "q_prompt_014"]
+    },
+    {
+      "id": "les_reasoning_prompts",
+      "moduleId": "mod_prompt_advanced", "courseId": "crs_prompt_advanced", "trackId": "trk_prompting",
+      "title": "Reasoning-Oriented Prompting",
+      "subtitle": "Asking for the working, not just the answer",
+      "category": "prompt_engineering", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 7,
+      "blocks": [
+        { "type": "paragraph", "text": "For multi-step problems, asking a model to work through its reasoning before answering measurably improves accuracy. The generated reasoning becomes part of the context the final answer is conditioned on." },
+        { "type": "code", "language": "text", "caption": "Chain-of-thought prompting.", "code": "A shop sells notebooks at 3 for 12 currency units. Priya buys 7\nnotebooks and pays with a 50 note. How much change does she get?\n\nWork through this step by step, showing each calculation, then\ngive the final answer on its own line prefixed with 'Answer:'." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Why it helps", "body": "A model produces one token at a time with a fixed amount of computation per token. Forcing intermediate steps gives it more computation to spend on the problem, and lets each step build on a written record of the last, rather than holding everything implicitly." },
+        { "type": "heading", "text": "Related techniques", "level": 2 },
+        { "type": "bullets", "items": [
+          "Self-consistency - sample several independent reasoning paths and take the majority answer",
+          "Least-to-most - solve the simplest sub-problem first, then build up",
+          "Step-back prompting - ask for the general principle before the specific case"
+        ]},
+        { "type": "callout", "style": "TIP", "title": "Reasoning models change the calculus", "body": "Newer reasoning models perform this internally and are often instructed not to be given explicit chain-of-thought prompts, which can interfere. Check the guidance for the model you are using rather than applying the technique reflexively." },
+        { "type": "callout", "style": "WARNING", "title": "Stated reasoning is not actual reasoning", "body": "The written steps are a plausible-looking explanation, not a transcript of the model's internal process. A model can produce flawless-looking reasoning and a wrong answer, or correct answers via nonsense steps. Verify conclusions, not just whether the working looks tidy." },
+        { "type": "question", "questionId": "q_prompt_015" }
+      ],
+      "summaryPoints": [
+        "Requesting step-by-step working improves multi-step accuracy",
+        "It gives the model more computation and an explicit record to build on",
+        "Written reasoning is a plausible explanation, not a faithful internal trace"
+      ],
+      "quizQuestionIds": ["q_prompt_015", "q_prompt_016", "q_prompt_017"]
+    },
+    {
+      "id": "les_prompt_debugging",
+      "moduleId": "mod_prompt_advanced", "courseId": "crs_prompt_advanced", "trackId": "trk_prompting",
+      "title": "Debugging and Optimising Prompts",
+      "subtitle": "A systematic method, not trial and error",
+      "category": "prompt_engineering", "difficulty": "MEDIUM", "estimatedMinutes": 7, "order": 8,
+      "blocks": [
+        { "type": "paragraph", "text": "Most people debug prompts by rewriting them at random until something works. That produces a prompt you cannot reason about and cannot safely change. A method works better." },
+        { "type": "bullets", "ordered": true, "items": [
+          "Build a small test set - 10 to 20 representative inputs with known good outputs",
+          "Establish a baseline by running your current prompt against all of them",
+          "Change exactly one thing, then re-run the whole set",
+          "Keep the change only if the score improves; revert it otherwise",
+          "Re-test the full set after every change, not just the case you were fixing"
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Fixing one case often breaks another", "body": "This is the reason to keep a test set. Adding an instruction to solve one failure regularly degrades three cases that previously worked - and without re-running everything, you will not notice until production does." },
+        { "type": "heading", "text": "Common failures and their fixes", "level": 2 },
+        { "type": "table", "headers": ["Symptom", "Likely cause", "Fix"], "rows": [
+          ["Output too long", "No length constraint", "State an explicit limit in words or sentences"],
+          ["Inconsistent format", "Format described, not shown", "Add a worked example of the exact output"],
+          ["Ignores an instruction", "Buried in the middle of a long prompt", "Move critical instructions to the start or end"],
+          ["Invents facts", "No grounding, and no permission to decline", "Supply source text; allow 'not stated in the source'"],
+          ["Refuses a legitimate request", "Ambiguous phrasing reads as risky", "State the legitimate purpose and context plainly"],
+          ["Varies run to run", "Temperature too high", "Set temperature to 0 for deterministic tasks"]
+        ]},
+        { "type": "callout", "style": "TIP", "title": "Version your prompts", "body": "Production prompts are code. Keep them in source control with their test cases, so you can see what changed, review it, and roll back a regression the same way you would any other deployment." },
+        { "type": "question", "questionId": "q_prompt_018" }
+      ],
+      "summaryPoints": [
+        "Debug against a fixed test set, changing one variable at a time",
+        "Always re-run every case - local fixes cause regressions elsewhere",
+        "Treat production prompts as versioned, reviewable code"
+      ],
+      "quizQuestionIds": ["q_prompt_018", "q_prompt_019", "q_prompt_020"]
+    }
+  ]
+}

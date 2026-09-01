@@ -1,0 +1,460 @@
+{
+  "lessons": [
+    {
+      "id": "les_ml_intro",
+      "moduleId": "mod_ml_paradigms", "courseId": "crs_ml_foundations", "trackId": "trk_ml",
+      "title": "Introduction to Machine Learning",
+      "subtitle": "Learning rules instead of writing them",
+      "category": "machine_learning", "difficulty": "EASY", "estimatedMinutes": 6, "order": 1,
+      "blocks": [
+        { "type": "paragraph", "text": "Machine learning is the branch of AI where a system improves at a task by being exposed to data, rather than by having its behaviour specified in advance." },
+        { "type": "paragraph", "text": "Consider handwriting recognition. Writing rules for the digit 7 is hopeless: some people cross it, some slant it, some make the top bar wavy. But show a system 60,000 labelled examples of handwritten digits and it will derive a decision rule far better than any you could write." },
+        { "type": "diagram", "title": "The reversal", "nodes": ["Traditional: Data + Rules -> Answers", "Machine learning: Data + Answers -> Rules"], "caption": "ML infers the rules from examples of correct answers." },
+        { "type": "heading", "text": "The three paradigms", "level": 2 },
+        { "type": "table", "headers": ["Paradigm", "What it gets", "What it learns"], "rows": [
+          ["Supervised", "Inputs with correct answers attached", "A mapping from input to answer"],
+          ["Unsupervised", "Inputs only, no answers", "Structure hidden in the data"],
+          ["Reinforcement", "An environment and a reward signal", "A policy for choosing actions"]
+        ]},
+        { "type": "callout", "style": "TIP", "title": "Choosing a paradigm", "body": "Ask what you have. Labelled examples? Supervised. Only raw data and a suspicion there are groups in it? Unsupervised. A system that acts, and a way to score the outcome? Reinforcement." },
+        { "type": "question", "questionId": "q_ml_001" }
+      ],
+      "summaryPoints": [
+        "ML infers rules from data instead of having them written by hand",
+        "Supervised learning needs labels; unsupervised finds structure without them",
+        "Reinforcement learning learns from rewards produced by acting in an environment"
+      ],
+      "quizQuestionIds": ["q_ml_001", "q_ml_002", "q_ml_003"]
+    },
+    {
+      "id": "les_supervised",
+      "moduleId": "mod_ml_paradigms", "courseId": "crs_ml_foundations", "trackId": "trk_ml",
+      "title": "Supervised Learning",
+      "subtitle": "Learning from labelled examples",
+      "category": "machine_learning", "difficulty": "EASY", "estimatedMinutes": 7, "order": 2,
+      "blocks": [
+        { "type": "paragraph", "text": "Supervised learning is the most widely deployed form of machine learning. Each training example pairs an input with the correct output, and the model learns the mapping between them." },
+        { "type": "heading", "text": "Two flavours", "level": 2 },
+        { "type": "table", "headers": ["", "Classification", "Regression"], "rows": [
+          ["Predicts", "A category", "A number"],
+          ["Example", "Is this email spam?", "What will this house sell for?"],
+          ["Output", "One of a fixed set of labels", "A continuous value"],
+          ["Typical metric", "Accuracy, precision, recall, F1", "Mean absolute error, RMSE"]
+        ]},
+        { "type": "paragraph", "text": "The distinction matters because it determines everything downstream: which algorithms apply, which loss function trains the model, and which metrics tell you whether it works. Predicting a house price with a classifier, or a category with a regressor, produces confusing nonsense." },
+        { "type": "code", "language": "python", "caption": "Classification and regression share an identical interface.", "code": "from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor\n\n# Classification: y holds categories, e.g. 'spam' / 'not spam'\nclassifier = RandomForestClassifier(n_estimators=100, random_state=42)\nclassifier.fit(X_train, y_train_labels)\n\n# Regression: y holds numbers, e.g. 285000.0\nregressor = RandomForestRegressor(n_estimators=100, random_state=42)\nregressor.fit(X_train, y_train_prices)\n\n# Same API, fundamentally different prediction:\nclassifier.predict(X_new)  # -> array(['spam'])\nregressor.predict(X_new)   # -> array([287431.5])" },
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "The labelling bottleneck", "body": "Supervised learning's weakness is that labels are expensive. Labelling medical scans requires radiologists; labelling legal documents requires lawyers. This cost is exactly why semi-supervised and self-supervised methods - which squeeze learning out of unlabelled data - became so important." },
+        { "type": "question", "questionId": "q_ml_004" }
+      ],
+      "summaryPoints": [
+        "Supervised learning maps inputs to known correct outputs",
+        "Classification predicts categories; regression predicts numbers",
+        "Labels are the expensive ingredient, which is why unlabelled-data methods matter"
+      ],
+      "quizQuestionIds": ["q_ml_004", "q_ml_005", "q_ml_006"]
+    },
+    {
+      "id": "les_unsupervised",
+      "moduleId": "mod_ml_paradigms", "courseId": "crs_ml_foundations", "trackId": "trk_ml",
+      "title": "Unsupervised and Semi-Supervised Learning",
+      "subtitle": "Finding structure nobody labelled",
+      "category": "machine_learning", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 3,
+      "blocks": [
+        { "type": "paragraph", "text": "Unsupervised learning receives inputs with no correct answers and looks for structure the data contains on its own." },
+        { "type": "heading", "text": "The main tasks", "level": 2 },
+        { "type": "bullets", "items": [
+          "Clustering - grouping similar items, such as segmenting customers by behaviour",
+          "Dimensionality reduction - compressing many features into a few that retain most information",
+          "Anomaly detection - flagging points that do not resemble anything else",
+          "Association - finding items that co-occur, as in market-basket analysis"
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "There is no answer key", "body": "Evaluating unsupervised learning is genuinely hard. If a clustering algorithm splits your customers into four groups, nothing tells you whether four was right or whether the groups mean anything. Interpretation is a human judgement, and it is where most of the risk sits." },
+        { "type": "heading", "text": "Semi-supervised: the practical middle", "level": 2 },
+        { "type": "paragraph", "text": "Real projects often have a small pile of labelled data and a mountain of unlabelled data. Semi-supervised learning uses both: it learns the general shape of the data from everything available, then uses the few labels to pin that structure to real categories. It is frequently the most economical option." },
+        { "type": "question", "questionId": "q_ml_007" }
+      ],
+      "summaryPoints": [
+        "Unsupervised learning finds structure without labels",
+        "Clustering, dimensionality reduction and anomaly detection are its main tasks",
+        "Validation is the hard part - there is no ground truth to check against"
+      ],
+      "quizQuestionIds": ["q_ml_007", "q_ml_008"]
+    },
+    {
+      "id": "les_reinforcement",
+      "moduleId": "mod_ml_paradigms", "courseId": "crs_ml_foundations", "trackId": "trk_ml",
+      "title": "Reinforcement Learning",
+      "subtitle": "Learning by trial, error and reward",
+      "category": "machine_learning", "difficulty": "MEDIUM", "estimatedMinutes": 7, "order": 4,
+      "blocks": [
+        { "type": "paragraph", "text": "Reinforcement learning has no dataset. An agent acts in an environment, receives rewards or penalties, and gradually learns a policy - a strategy for choosing actions that maximises reward over time." },
+        { "type": "diagram", "title": "The RL loop", "nodes": ["Agent observes state", "Agent chooses action", "Environment changes", "Environment returns reward", "Agent updates policy"], "caption": "The loop repeats for millions of steps." },
+        { "type": "heading", "text": "The core vocabulary", "level": 2 },
+        { "type": "table", "headers": ["Term", "Meaning"], "rows": [
+          ["Agent", "The learner making decisions"],
+          ["Environment", "Everything the agent interacts with"],
+          ["State", "The current situation the agent observes"],
+          ["Action", "A choice available to the agent"],
+          ["Reward", "A numeric signal of how good the outcome was"],
+          ["Policy", "The agent's strategy for mapping states to actions"]
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Exploration versus exploitation", "body": "The central tension in RL. Exploiting means taking the action known to be good. Exploring means trying something unknown that might be better. Pure exploitation traps the agent in mediocrity; pure exploration never converges. Balancing the two is the essential difficulty." },
+        { "type": "paragraph", "text": "RL powers game-playing systems, robot control and recommendation tuning. It also appears in language-model alignment: reinforcement learning from human feedback trains a model to prefer responses that people rated highly, using those ratings as the reward signal." },
+        { "type": "callout", "style": "WARNING", "title": "Reward hacking", "body": "Agents optimise the reward you specified, not the outcome you intended. A cleaning robot rewarded for 'no visible mess' may learn to hide rubbish under a rug. Specifying rewards that cannot be gamed is far harder than it sounds." },
+        { "type": "question", "questionId": "q_ml_009" }
+      ],
+      "summaryPoints": [
+        "RL learns a policy from rewards earned by acting, not from a fixed dataset",
+        "Exploration versus exploitation is the central trade-off",
+        "Agents optimise the literal reward, which is why reward design is a safety problem"
+      ],
+      "quizQuestionIds": ["q_ml_009", "q_ml_010", "q_ml_011"]
+    },
+    {
+      "id": "les_features_labels",
+      "moduleId": "mod_ml_data", "courseId": "crs_ml_foundations", "trackId": "trk_ml",
+      "title": "Features and Labels",
+      "subtitle": "The shape of every dataset",
+      "category": "machine_learning", "difficulty": "EASY", "estimatedMinutes": 5, "order": 5,
+      "blocks": [
+        { "type": "paragraph", "text": "Nearly every supervised dataset is a table. Rows are examples, most columns are features, and one column is the label." },
+        { "type": "table", "headers": ["Size (m2)", "Bedrooms", "Age (yrs)", "-> Price"], "rows": [
+          ["85", "2", "12", "245,000"],
+          ["140", "4", "3", "410,000"],
+          ["62", "1", "35", "168,000"]
+        ], "caption": "Three features, one label. The arrow marks the column the model predicts." },
+        { "type": "bullets", "items": [
+          "Feature - an input variable the model is allowed to use, conventionally written X",
+          "Label - the correct answer the model is trying to predict, conventionally written y",
+          "Example - one row: a complete set of features plus its label"
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "Target leakage", "body": "A feature that would not be available at prediction time will wreck your model. Including 'date the loan defaulted' as a feature for predicting default gives near-perfect test scores and zero real-world value, because in production that column is empty." },
+        { "type": "paragraph", "text": "The discipline is simple to state and easy to forget: for every feature, ask whether you would genuinely know its value at the moment you need the prediction. If not, drop it." },
+        { "type": "question", "questionId": "q_ml_012" }
+      ],
+      "summaryPoints": [
+        "Features are inputs (X); the label is the answer being predicted (y)",
+        "Each row is one example, features plus label",
+        "Any feature unavailable at prediction time causes target leakage"
+      ],
+      "quizQuestionIds": ["q_ml_012", "q_ml_013"]
+    },
+    {
+      "id": "les_data_splits",
+      "moduleId": "mod_ml_data", "courseId": "crs_ml_foundations", "trackId": "trk_ml",
+      "title": "Training, Validation and Test Sets",
+      "subtitle": "Why you need three, not two",
+      "category": "machine_learning", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 6,
+      "blocks": [
+        { "type": "paragraph", "text": "Splitting data into three parts is not bureaucracy. Each split answers a different question, and collapsing them produces numbers that flatter the model and mislead you." },
+        { "type": "table", "headers": ["Split", "Typical share", "Used for", "Model sees it?"], "rows": [
+          ["Training", "60-80%", "Fitting parameters", "Yes, repeatedly"],
+          ["Validation", "10-20%", "Choosing hyperparameters and comparing models", "Indirectly, many times"],
+          ["Test", "10-20%", "One final honest estimate", "Exactly once, at the end"]
+        ]},
+        { "type": "heading", "text": "Why validation and test must be separate", "level": 2 },
+        { "type": "paragraph", "text": "Suppose you try fifty model configurations and pick the one that scores best on the validation set. That score is now optimistic: you selected for it. Some of that performance is genuine and some is luck, and you cannot tell which. The test set - untouched during all that selection - gives the unbiased number." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Spend the test set once", "body": "The moment you look at the test score and go back to change the model, the test set has become a second validation set and its honesty is gone. Treat it as a single-use resource." },
+        { "type": "code", "language": "python", "caption": "A correct three-way split.", "code": "from sklearn.model_selection import train_test_split\n\n# First carve off the test set and set it aside entirely.\nX_temp, X_test, y_temp, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y\n)\n\n# Then split the remainder into train and validation.\nX_train, X_val, y_train, y_val = train_test_split(\n    X_temp, y_temp, test_size=0.25, random_state=42, stratify=y_temp\n)\n# Result: 60% train, 20% validation, 20% test.\n\n# stratify=y keeps the class balance identical across all three splits,\n# which matters enormously on imbalanced data." },
+        { "type": "callout", "style": "TIP", "title": "Time-series data is different", "body": "For anything with a time order, never split randomly. Train on the past and test on the future, or you will leak tomorrow's information into today's model and produce results you can never reproduce in production." },
+        { "type": "question", "questionId": "q_ml_014" }
+      ],
+      "summaryPoints": [
+        "Train fits parameters, validation selects models, test gives one honest estimate",
+        "Reusing the test set for decisions destroys its value",
+        "Time-series data must be split chronologically, never randomly"
+      ],
+      "quizQuestionIds": ["q_ml_014", "q_ml_015", "q_ml_016"]
+    },
+    {
+      "id": "les_linear_regression",
+      "moduleId": "mod_ml_algorithms", "courseId": "crs_ml_algorithms", "trackId": "trk_ml",
+      "title": "Linear Regression",
+      "subtitle": "The algorithm everything else is compared against",
+      "category": "machine_learning", "difficulty": "EASY", "estimatedMinutes": 6, "order": 7,
+      "blocks": [
+        { "type": "paragraph", "text": "Linear regression fits a straight line - or in higher dimensions, a flat plane - through the data, and predicts by reading off that line. It is the simplest useful regression algorithm and remains the correct first thing to try." },
+        { "type": "paragraph", "text": "The model is a weighted sum: prediction = w1 x feature1 + w2 x feature2 + ... + b. Training finds the weights that minimise the squared difference between predictions and actual values." },
+        { "type": "code", "language": "python", "caption": "Fitting and interpreting a linear model.", "code": "from sklearn.linear_model import LinearRegression\nimport numpy as np\n\nmodel = LinearRegression()\nmodel.fit(X_train, y_train)\n\n# Each coefficient is the predicted change in y for a one-unit\n# increase in that feature, holding the others constant.\nfor name, weight in zip(feature_names, model.coef_):\n    print(f'{name}: {weight:+.2f}')\n\n# size_m2: +2841.30   <- each extra square metre adds ~2841\n# bedrooms: +7120.55\n# age_years: -1204.80  <- each year of age subtracts ~1205" },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Its real superpower is legibility", "body": "You can read a linear model's reasoning directly off its coefficients and explain a decision to a regulator, a customer or a colleague. Very few algorithms offer that, and in regulated domains it often outweighs a few points of accuracy." },
+        { "type": "heading", "text": "Where it breaks", "level": 2 },
+        { "type": "bullets", "items": [
+          "Genuinely non-linear relationships - it will fit a straight line to a curve and be wrong everywhere",
+          "Outliers - squared error means one extreme point can drag the whole line",
+          "Highly correlated features - coefficients become unstable and lose their interpretation"
+        ]},
+        { "type": "question", "questionId": "q_ml_017" }
+      ],
+      "summaryPoints": [
+        "Linear regression predicts a weighted sum of the features",
+        "Coefficients are directly interpretable, which is its main advantage",
+        "It fails on non-linear patterns and is sensitive to outliers"
+      ],
+      "quizQuestionIds": ["q_ml_017", "q_ml_018"]
+    },
+    {
+      "id": "les_logistic_regression",
+      "moduleId": "mod_ml_algorithms", "courseId": "crs_ml_algorithms", "trackId": "trk_ml",
+      "title": "Logistic Regression",
+      "subtitle": "A regression that classifies",
+      "category": "machine_learning", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 8,
+      "blocks": [
+        { "type": "paragraph", "text": "Despite the name, logistic regression is a classification algorithm. It computes the same weighted sum as linear regression, then squashes the result through a sigmoid function so the output lands between 0 and 1 and can be read as a probability." },
+        { "type": "diagram", "title": "How it works", "nodes": ["Weighted sum of features", "Sigmoid squashes to 0-1", "Probability of the positive class", "Threshold to a decision"], "caption": "The threshold is a business choice, not a model output." },
+        { "type": "callout", "style": "TIP", "title": "The threshold is yours to set", "body": "The default 0.5 cutoff is a convention, not a law. For cancer screening you might flag anything above 0.1 - a false alarm is a follow-up test, a miss is a missed diagnosis. Tuning the threshold is often more valuable than tuning the model." },
+        { "type": "code", "language": "python", "caption": "Probabilities, not just labels.", "code": "from sklearn.linear_model import LogisticRegression\n\nmodel = LogisticRegression(max_iter=1000)\nmodel.fit(X_train, y_train)\n\n# predict() applies the default 0.5 threshold for you.\nlabels = model.predict(X_test)\n\n# predict_proba() gives the underlying probabilities, which is what\n# you want whenever the cost of the two error types differs.\nprobabilities = model.predict_proba(X_test)[:, 1]\nhigh_risk = probabilities > 0.15  # a deliberately cautious threshold" },
+        { "type": "paragraph", "text": "Logistic regression is fast, interpretable and remarkably hard to beat on well-prepared tabular data. It is the standard baseline: if a complex model cannot beat it, the complexity is not earning its keep." },
+        { "type": "question", "questionId": "q_ml_019" }
+      ],
+      "summaryPoints": [
+        "Logistic regression classifies by squashing a weighted sum into a probability",
+        "The decision threshold is a business choice, not a fixed 0.5",
+        "It is the baseline every more complex classifier should have to beat"
+      ],
+      "quizQuestionIds": ["q_ml_019", "q_ml_020"]
+    },
+    {
+      "id": "les_trees_forests",
+      "moduleId": "mod_ml_algorithms", "courseId": "crs_ml_algorithms", "trackId": "trk_ml",
+      "title": "Decision Trees and Random Forests",
+      "subtitle": "The workhorses of tabular data",
+      "category": "machine_learning", "difficulty": "MEDIUM", "estimatedMinutes": 7, "order": 9,
+      "blocks": [
+        { "type": "paragraph", "text": "A decision tree asks a sequence of yes/no questions about the features, splitting the data at each step, until it reaches a leaf holding a prediction. It mirrors how people actually make decisions, which is why its output is so readable." },
+        { "type": "diagram", "title": "A loan approval tree", "nodes": ["Income > 40k?", "No -> Decline", "Yes: Credit score > 650?", "No -> Manual review", "Yes -> Approve"], "caption": "Every prediction traces a readable path from root to leaf." },
+        { "type": "heading", "text": "The problem with a single tree", "level": 2 },
+        { "type": "paragraph", "text": "A tree grown deep enough will keep splitting until every training example sits in its own leaf. At that point it has memorised the data perfectly and learned nothing generalisable. Single trees overfit badly." },
+        { "type": "heading", "text": "Random forests fix it", "level": 2 },
+        { "type": "paragraph", "text": "A random forest trains hundreds of trees, each on a random sample of the rows and considering a random subset of the features at each split, then averages their predictions. The individual trees are deliberately imperfect and their errors are uncorrelated, so averaging cancels much of the noise." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Why randomness helps", "body": "If every tree saw all the data and all the features, they would all be nearly identical and averaging would achieve nothing. Forcing each tree to see a different slice is what makes their mistakes independent - and independent mistakes cancel out." },
+        { "type": "code", "language": "python", "code": "from sklearn.ensemble import RandomForestClassifier\n\nforest = RandomForestClassifier(\n    n_estimators=300,      # more trees: better, slower, never worse\n    max_depth=12,          # cap depth to limit overfitting\n    min_samples_leaf=5,    # a leaf must cover at least 5 examples\n    n_jobs=-1,\n    random_state=42,\n)\nforest.fit(X_train, y_train)\n\n# Forests report which features drove their decisions.\nimportances = sorted(\n    zip(feature_names, forest.feature_importances_),\n    key=lambda pair: pair[1], reverse=True,\n)" },
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "Still winning", "body": "Tree ensembles - random forests and gradient boosting - remain the top performers on tabular data competitions. On spreadsheet-shaped problems they routinely beat neural networks while training in seconds." },
+        { "type": "question", "questionId": "q_ml_021" }
+      ],
+      "summaryPoints": [
+        "A decision tree splits data with yes/no questions and is highly interpretable",
+        "Single deep trees overfit by memorising the training data",
+        "Random forests average many deliberately varied trees so their errors cancel"
+      ],
+      "quizQuestionIds": ["q_ml_021", "q_ml_022", "q_ml_023"]
+    },
+    {
+      "id": "les_knn_naive_bayes",
+      "moduleId": "mod_ml_algorithms", "courseId": "crs_ml_algorithms", "trackId": "trk_ml",
+      "title": "K-Nearest Neighbours and Naive Bayes",
+      "subtitle": "Two simple ideas that still work",
+      "category": "machine_learning", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 10,
+      "blocks": [
+        { "type": "heading", "text": "K-Nearest Neighbours", "level": 2 },
+        { "type": "paragraph", "text": "KNN does no training at all. To classify a new point it finds the k closest examples in the training data and takes a majority vote. All the work happens at prediction time, which makes it fast to set up and slow to serve." },
+        { "type": "bullets", "items": [
+          "Small k follows the data closely and is sensitive to noise",
+          "Large k gives smoother boundaries but can wash out genuine local structure",
+          "Features must be scaled - otherwise a feature measured in thousands dominates the distance"
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "Scale your features first", "body": "KNN measures distance. If income runs to 50,000 and age to 50, income overwhelms every distance calculation and age effectively stops existing. Always standardise features before using any distance-based algorithm." },
+        { "type": "heading", "text": "Naive Bayes", "level": 2 },
+        { "type": "paragraph", "text": "Naive Bayes applies Bayes' theorem while assuming every feature is independent of every other. That assumption is almost always false - the word 'machine' and the word 'learning' are clearly not independent - which is why it is called naive." },
+        { "type": "paragraph", "text": "Remarkably, it works anyway. For text classification the assumption is wrong but the errors it introduces tend to affect all classes similarly, so the ranking between classes survives. Naive Bayes trains in a single pass, handles enormous vocabularies, and was the backbone of spam filtering for years." },
+        { "type": "table", "headers": ["", "KNN", "Naive Bayes"], "rows": [
+          ["Training cost", "None", "Very low - one pass"],
+          ["Prediction cost", "High - searches all training data", "Very low"],
+          ["Needs scaling", "Yes, critically", "No"],
+          ["Best for", "Small datasets with meaningful distance", "Text and high-dimensional sparse data"]
+        ]},
+        { "type": "question", "questionId": "q_ml_024" }
+      ],
+      "summaryPoints": [
+        "KNN classifies by majority vote among the k nearest training examples",
+        "Distance-based methods require feature scaling to work at all",
+        "Naive Bayes assumes feature independence - false, but effective for text"
+      ],
+      "quizQuestionIds": ["q_ml_024", "q_ml_025", "q_ml_026"]
+    },
+    {
+      "id": "les_svm",
+      "moduleId": "mod_ml_algorithms", "courseId": "crs_ml_algorithms", "trackId": "trk_ml",
+      "title": "Support Vector Machines",
+      "subtitle": "Finding the widest possible boundary",
+      "category": "machine_learning", "difficulty": "HARD", "estimatedMinutes": 6, "order": 11,
+      "blocks": [
+        { "type": "paragraph", "text": "Many lines can separate two classes. A support vector machine looks for the one with the widest possible margin - the greatest clearance between the boundary and the nearest points of either class." },
+        { "type": "paragraph", "text": "Those nearest points are the support vectors, and they are the only ones that matter. Move a distant point and the boundary does not shift at all; move a support vector and it does. This makes SVMs unusually robust to irrelevant data far from the decision surface." },
+        { "type": "heading", "text": "The kernel trick", "level": 2 },
+        { "type": "paragraph", "text": "Data that cannot be separated by a straight line often becomes separable in a higher-dimensional space. Picture points arranged in two concentric rings: no line divides them, but lifting them onto a bowl shape lets a flat plane slice cleanly between the rings." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Why it is called a trick", "body": "Actually computing those higher-dimensional coordinates would be prohibitively expensive. A kernel function computes the distances in that space without ever constructing it - the geometry of a space you never visit, for the price of an ordinary calculation." },
+        { "type": "code", "language": "python", "code": "from sklearn.svm import SVC\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\n# SVMs are distance-based, so scaling is mandatory. A pipeline keeps\n# the scaler fitted on training data only, preventing leakage.\nmodel = make_pipeline(\n    StandardScaler(),\n    SVC(kernel='rbf', C=1.0, gamma='scale', probability=True),\n)\nmodel.fit(X_train, y_train)\n\n# C controls the margin/error trade-off: low C accepts more training\n# mistakes for a wider, more general boundary." },
+        { "type": "paragraph", "text": "SVMs excel on small and medium datasets with clear separation, especially when features outnumber examples. They scale poorly to very large datasets, where tree ensembles are usually the better choice." },
+        { "type": "question", "questionId": "q_ml_027" }
+      ],
+      "summaryPoints": [
+        "SVMs maximise the margin between classes, defined by the support vectors",
+        "The kernel trick handles non-linear data without computing high-dimensional coordinates",
+        "Strong on small, high-dimensional data; poor at very large scale"
+      ],
+      "quizQuestionIds": ["q_ml_027", "q_ml_028"]
+    },
+    {
+      "id": "les_kmeans",
+      "moduleId": "mod_ml_algorithms", "courseId": "crs_ml_algorithms", "trackId": "trk_ml",
+      "title": "K-Means Clustering",
+      "subtitle": "Grouping without labels",
+      "category": "machine_learning", "difficulty": "MEDIUM", "estimatedMinutes": 6, "order": 12,
+      "blocks": [
+        { "type": "paragraph", "text": "K-means splits data into k groups by repeatedly assigning each point to its nearest cluster centre, then moving each centre to the mean of the points assigned to it. Repeat until nothing moves." },
+        { "type": "bullets", "ordered": true, "items": [
+          "Place k centres at random positions",
+          "Assign every point to its nearest centre",
+          "Move each centre to the average of its assigned points",
+          "Repeat steps 2 and 3 until assignments stop changing"
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "You must choose k in advance", "body": "This is the algorithm's central awkwardness: it cannot tell you how many groups exist. The elbow method - plotting within-cluster variance against k and looking for the bend - is the usual heuristic, but it is a judgement call, not a calculation." },
+        { "type": "heading", "text": "What it assumes", "level": 2 },
+        { "type": "bullets", "items": [
+          "Clusters are roughly spherical and similarly sized",
+          "Features are scaled comparably",
+          "Every point belongs to exactly one cluster"
+        ]},
+        { "type": "paragraph", "text": "When those assumptions fail - elongated clusters, wildly different densities, clear outliers - k-means produces confidently wrong groupings. DBSCAN and hierarchical clustering handle those cases better." },
+        { "type": "code", "language": "python", "code": "from sklearn.cluster import KMeans\nfrom sklearn.preprocessing import StandardScaler\n\nX_scaled = StandardScaler().fit_transform(X)\n\n# The elbow method: look for where the improvement flattens out.\ninertias = []\nfor k in range(2, 11):\n    km = KMeans(n_clusters=k, n_init=10, random_state=42)\n    km.fit(X_scaled)\n    inertias.append(km.inertia_)\n\n# n_init=10 runs the whole algorithm 10 times from different random\n# starts and keeps the best - k-means can converge to a poor local\n# optimum depending on where the centres began." },
+        { "type": "question", "questionId": "q_ml_029" }
+      ],
+      "summaryPoints": [
+        "K-means alternates assigning points to centres and recomputing those centres",
+        "The number of clusters k must be chosen by you, typically via the elbow method",
+        "It assumes spherical, similarly sized clusters and fails when that is untrue"
+      ],
+      "quizQuestionIds": ["q_ml_029", "q_ml_030"]
+    },
+    {
+      "id": "les_overfitting",
+      "moduleId": "mod_ml_evaluation", "courseId": "crs_ml_evaluation", "trackId": "trk_ml",
+      "title": "Overfitting and Underfitting",
+      "subtitle": "The two ways a model goes wrong",
+      "category": "machine_learning", "difficulty": "MEDIUM", "estimatedMinutes": 7, "order": 13,
+      "blocks": [
+        { "type": "paragraph", "text": "Every failing model fails in one of two directions. It either memorised the training data instead of learning from it, or it was too simple to capture the pattern at all." },
+        { "type": "table", "headers": ["", "Underfitting", "Good fit", "Overfitting"], "rows": [
+          ["Training accuracy", "Low", "High", "Very high, often near perfect"],
+          ["Test accuracy", "Low", "High", "Much lower than training"],
+          ["Diagnosis", "Model too simple", "Balanced", "Model memorised the noise"],
+          ["Fix", "More features, more capacity", "Ship it", "More data, regularisation, less capacity"]
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "The tell-tale gap", "body": "Overfitting has an unmistakable signature: excellent training scores and disappointing test scores. If both numbers are low, you are underfitting. The gap between them is the diagnostic, not either number alone." },
+        { "type": "heading", "text": "Fixing overfitting", "level": 2 },
+        { "type": "bullets", "items": [
+          "Get more training data - the single most effective remedy when it is possible",
+          "Regularisation - penalise large weights so the model prefers simpler explanations",
+          "Reduce capacity - fewer layers, shallower trees, fewer features",
+          "Dropout - randomly disable neurons during training so no single path is relied upon",
+          "Early stopping - halt training when validation performance stops improving"
+        ]},
+        { "type": "paragraph", "text": "Early stopping deserves particular attention because it is nearly free. Watch the validation loss during training: it falls, flattens, then starts to climb. That upturn is the moment the model switched from learning to memorising, and the best model is the one from just before it." },
+        { "type": "question", "questionId": "q_ml_031" }
+      ],
+      "summaryPoints": [
+        "Overfitting means memorising training data; underfitting means missing the pattern",
+        "A large train/test gap is the signature of overfitting",
+        "More data, regularisation, less capacity and early stopping are the standard fixes"
+      ],
+      "quizQuestionIds": ["q_ml_031", "q_ml_032", "q_ml_033"]
+    },
+    {
+      "id": "les_bias_variance",
+      "moduleId": "mod_ml_evaluation", "courseId": "crs_ml_evaluation", "trackId": "trk_ml",
+      "title": "The Bias-Variance Trade-off",
+      "subtitle": "Two sources of error, pulling in opposite directions",
+      "category": "machine_learning", "difficulty": "HARD", "estimatedMinutes": 6, "order": 14,
+      "blocks": [
+        { "type": "paragraph", "text": "Model error decomposes into three parts: bias, variance, and irreducible noise. Understanding which one dominates tells you what to do next." },
+        { "type": "table", "headers": ["Source", "Meaning", "Symptom"], "rows": [
+          ["Bias", "Error from wrong assumptions - the model is too rigid", "Underfits; poor on both train and test"],
+          ["Variance", "Error from sensitivity to the particular training sample", "Overfits; excellent on train, poor on test"],
+          ["Noise", "Randomness genuinely present in the data", "Irreducible - no model removes it"]
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "An analogy", "body": "Picture darts on a board. High bias is a tight cluster in the wrong place - consistent but consistently off. High variance is darts scattered all over, averaging out near the bullseye but never reliable. You want tight and centred." },
+        { "type": "paragraph", "text": "The trade-off is real: making a model more flexible reduces bias and raises variance, and vice versa. A straight line through curved data has high bias. A degree-20 polynomial threading every point has high variance. The best model sits between them." },
+        { "type": "heading", "text": "Diagnosing which you have", "level": 2 },
+        { "type": "bullets", "items": [
+          "Training error high, test error similarly high -> bias problem, use a more capable model",
+          "Training error low, test error much higher -> variance problem, regularise or gather more data",
+          "Both low and close together -> you are done"
+        ]},
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "Modern models complicate the picture", "body": "Very large neural networks sometimes show 'double descent': as capacity grows past the point of interpolating the training data, test error falls again after first getting worse. The classical trade-off still guides practice, but it is not the complete story at extreme scale." },
+        { "type": "question", "questionId": "q_ml_034" }
+      ],
+      "summaryPoints": [
+        "Error splits into bias, variance and irreducible noise",
+        "High bias underfits; high variance overfits",
+        "Compare training and test error to decide which problem you actually have"
+      ],
+      "quizQuestionIds": ["q_ml_034", "q_ml_035"]
+    },
+    {
+      "id": "les_metrics",
+      "moduleId": "mod_ml_evaluation", "courseId": "crs_ml_evaluation", "trackId": "trk_ml",
+      "title": "Evaluation Metrics That Do Not Lie",
+      "subtitle": "Accuracy is usually the wrong number",
+      "category": "machine_learning", "difficulty": "MEDIUM", "estimatedMinutes": 8, "order": 15,
+      "blocks": [
+        { "type": "paragraph", "text": "Choosing the wrong metric is how teams ship confidently broken models. The metric must reflect what actually matters for the decision the model informs." },
+        { "type": "heading", "text": "The confusion matrix", "level": 2 },
+        { "type": "table", "headers": ["", "Predicted positive", "Predicted negative"], "rows": [
+          ["Actually positive", "True positive (TP)", "False negative (FN) - a miss"],
+          ["Actually negative", "False positive (FP) - a false alarm", "True negative (TN)"]
+        ]},
+        { "type": "bullets", "items": [
+          "Accuracy = (TP + TN) / everything. Useless when classes are imbalanced",
+          "Precision = TP / (TP + FP). Of the things you flagged, how many were real?",
+          "Recall = TP / (TP + FN). Of the real things, how many did you catch?",
+          "F1 = the harmonic mean of precision and recall, when you need one number"
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Precision and recall trade off", "body": "Flag everything and recall hits 100% while precision collapses. Flag only the single most obvious case and precision hits 100% while recall collapses. Which you favour is a question about consequences, not about mathematics." },
+        { "type": "heading", "text": "Choosing by consequence", "level": 2 },
+        { "type": "table", "headers": ["Scenario", "Optimise for", "Because"], "rows": [
+          ["Cancer screening", "Recall", "A missed case is far worse than an extra test"],
+          ["Spam filtering", "Precision", "A lost job offer is worse than a spam email getting through"],
+          ["Fraud detection", "Balanced (F1) or cost-weighted", "Both blocked customers and lost money are expensive"],
+          ["Search ranking", "Precision at the top", "Nobody looks past the first few results"]
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "The 99.9% trap", "body": "If 1 in 1,000 transactions is fraud, a model predicting 'never fraud' scores 99.9% accuracy and catches nothing. Whenever you see a very high accuracy on imbalanced data, check recall before celebrating." },
+        { "type": "question", "questionId": "q_ml_036" }
+      ],
+      "summaryPoints": [
+        "Accuracy is misleading whenever classes are imbalanced",
+        "Precision asks how many flags were right; recall asks how many real cases were caught",
+        "Choose the metric from the cost of each error type, not from convention"
+      ],
+      "quizQuestionIds": ["q_ml_036", "q_ml_037", "q_ml_038", "q_ml_039"]
+    },
+    {
+      "id": "les_feature_engineering",
+      "moduleId": "mod_ml_evaluation", "courseId": "crs_ml_evaluation", "trackId": "trk_ml",
+      "title": "Feature Engineering",
+      "subtitle": "Where the real gains hide",
+      "category": "machine_learning", "difficulty": "MEDIUM", "estimatedMinutes": 7, "order": 16,
+      "blocks": [
+        { "type": "paragraph", "text": "Feature engineering is reshaping raw data into inputs that expose the pattern clearly. On tabular problems it routinely produces larger gains than switching algorithms." },
+        { "type": "heading", "text": "The common techniques", "level": 2 },
+        { "type": "table", "headers": ["Technique", "What it does", "When to use it"], "rows": [
+          ["Scaling", "Puts features on a comparable range", "Any distance-based or gradient-based model"],
+          ["One-hot encoding", "Turns categories into binary columns", "Categorical features with no natural order"],
+          ["Binning", "Groups a continuous value into ranges", "When only the band matters, e.g. age groups"],
+          ["Date decomposition", "Splits a timestamp into day, month, weekday", "Anything with seasonal behaviour"],
+          ["Ratios", "Combines two features into a more meaningful one", "Price per square metre beats price and area separately"],
+          ["Log transform", "Compresses a heavily skewed distribution", "Incomes, populations, view counts"]
+        ]},
+        { "type": "callout", "style": "TIP", "title": "Domain knowledge is the multiplier", "body": "The single best feature in a house-price model is often price per square metre - a ratio no algorithm would invent, but any estate agent would name in a second. Talking to someone who knows the domain is a legitimate and underused modelling technique." },
+        { "type": "code", "language": "python", "caption": "Fit transformations on training data only.", "code": "from sklearn.compose import ColumnTransformer\nfrom sklearn.preprocessing import StandardScaler, OneHotEncoder\nfrom sklearn.pipeline import Pipeline\nfrom sklearn.ensemble import RandomForestClassifier\n\npreprocess = ColumnTransformer([\n    ('numeric', StandardScaler(), numeric_columns),\n    ('categorical', OneHotEncoder(handle_unknown='ignore'), categorical_columns),\n])\n\n# Wrapping everything in a Pipeline guarantees the scaler learns its\n# mean and standard deviation from the TRAINING fold only. Scaling the\n# full dataset before splitting leaks test statistics into training -\n# a subtle bug that silently inflates every score you report.\nmodel = Pipeline([\n    ('prep', preprocess),\n    ('clf', RandomForestClassifier(n_estimators=200, random_state=42)),\n])\nmodel.fit(X_train, y_train)" },
+        { "type": "callout", "style": "WARNING", "title": "Fit on train, apply to test", "body": "Every transformation with learned state - scalers, encoders, imputers - must be fitted on training data and merely applied to validation and test data. Fitting on everything is the most common form of silent data leakage." },
+        { "type": "question", "questionId": "q_ml_040" }
+      ],
+      "summaryPoints": [
+        "Better features usually beat better algorithms on tabular data",
+        "Scaling, encoding, binning, date decomposition and ratios are the core toolkit",
+        "Fit transformations on training data only, or you leak test information"
+      ],
+      "quizQuestionIds": ["q_ml_040", "q_ml_041", "q_ml_042"]
+    }
+  ]
+}

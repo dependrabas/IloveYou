@@ -1,0 +1,362 @@
+{
+  "lessons": [
+    {
+      "id": "les_what_is_ai",
+      "moduleId": "mod_ai_intro", "courseId": "crs_ai_foundations", "trackId": "trk_fundamentals",
+      "title": "What Is Artificial Intelligence?",
+      "subtitle": "A working definition you can actually use",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 6, "order": 1,
+      "blocks": [
+        { "type": "paragraph", "text": "Artificial intelligence is the field of building systems that perform tasks we would normally say require human intelligence: recognising a face, understanding a sentence, planning a route, or deciding whether a transaction looks fraudulent." },
+        { "type": "paragraph", "text": "That definition is deliberately about behaviour, not about how the system works inside. A spam filter and a self-driving car share almost no engineering, but both are AI because both make judgements that used to require a person." },
+        { "type": "heading", "text": "The shift that made AI work", "level": 2 },
+        { "type": "paragraph", "text": "For decades, AI meant writing rules by hand: if the email contains 'free money', mark it as spam. That approach breaks quickly, because the world has more exceptions than any team can enumerate. Modern AI flipped the problem around. Instead of writing the rules, we show the system thousands of examples and let it derive the rules itself. That is machine learning, and it is why AI suddenly started working." },
+        { "type": "callout", "style": "KEY_IDEA", "title": "The one-sentence version", "body": "Traditional software follows rules a human wrote. Modern AI discovers rules from examples a human collected." },
+        { "type": "heading", "text": "What counts as intelligence here", "level": 2 },
+        { "type": "bullets", "items": [
+          "Perception - turning raw pixels or audio into meaning",
+          "Reasoning - drawing conclusions that were not stated directly",
+          "Learning - improving with experience instead of staying fixed",
+          "Planning - choosing a sequence of actions toward a goal",
+          "Language - producing and interpreting text a human would accept"
+        ]},
+        { "type": "question", "questionId": "q_fund_001" },
+        { "type": "callout", "style": "WARNING", "title": "A common misconception", "body": "An AI system does not 'understand' in the way you do. A model that writes a convincing essay about grief has never grieved. It has learned the statistical shape of how people write about it. Keeping that distinction in mind will save you from both over-trusting and under-estimating these systems." },
+        { "type": "paragraph", "text": "That is not a reason to dismiss the technology. A calculator does not understand arithmetic either, and it is still the right tool for adding numbers. The skill is knowing which tasks a system is genuinely reliable for." }
+      ],
+      "summaryPoints": [
+        "AI is defined by what a system does, not by how it is built",
+        "Modern AI learns rules from examples instead of following hand-written ones",
+        "Capability is not comprehension - useful output does not imply understanding"
+      ],
+      "quizQuestionIds": ["q_fund_001", "q_fund_002", "q_fund_003"]
+    },
+    {
+      "id": "les_history_of_ai",
+      "moduleId": "mod_ai_intro", "courseId": "crs_ai_foundations", "trackId": "trk_fundamentals",
+      "title": "A Short History of AI",
+      "subtitle": "Why it took seventy years to work",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 7, "order": 2,
+      "blocks": [
+        { "type": "paragraph", "text": "AI is older than most people assume. The ideas were in place long before the machines could run them, which explains the field's long history of enormous promises followed by long silences." },
+        { "type": "table", "headers": ["Era", "What happened", "Why it stalled or worked"], "rows": [
+          ["1950", "Alan Turing asks whether machines can think and proposes the imitation game", "A philosophical foundation, but no hardware to test it"],
+          ["1956", "The Dartmouth workshop names the field 'artificial intelligence'", "Optimism far exceeded available computing power"],
+          ["1960s-70s", "Symbolic AI: reasoning over hand-written logical rules", "Worked in toy worlds, collapsed on real-world messiness"],
+          ["1974-80", "The first 'AI winter' - funding withdrawn", "Results did not match the promises"],
+          ["1980s", "Expert systems encode specialist knowledge as rules", "Expensive to build, brittle, impossible to maintain"],
+          ["1987-93", "The second AI winter", "Expert systems failed to generalise"],
+          ["1997", "Deep Blue beats Kasparov at chess", "Brute-force search plus curated knowledge, not learning"],
+          ["2012", "AlexNet wins ImageNet by a huge margin", "GPUs plus big labelled datasets made deep learning practical"],
+          ["2017", "The Transformer architecture is published", "Attention replaced recurrence and made models scalable"],
+          ["2020s", "Large language and multimodal models reach general use", "Scale, data and the Transformer combined"]
+        ]},
+        { "type": "heading", "text": "The three ingredients that finally arrived together", "level": 2 },
+        { "type": "paragraph", "text": "Deep learning did not work in the 1980s because two of its three ingredients were missing. The algorithms were largely known; the data and the compute were not." },
+        { "type": "diagram", "title": "What made the difference", "nodes": ["Algorithms (known since the 1980s)", "Data (the internet, 2000s)", "Compute (GPUs, 2010s)", "Deep learning works"], "caption": "Backpropagation was published in 1986. It needed twenty-five more years of data and hardware." },
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "Did you know?", "body": "The neural network is not a modern invention. The perceptron, the ancestor of every model in this course, was built as physical hardware in 1958 - a room-sized machine with motor-driven potentiometers for weights." },
+        { "type": "question", "questionId": "q_fund_004" },
+        { "type": "paragraph", "text": "The pattern is worth remembering: in AI, an idea failing usually means the surrounding conditions were not ready, not that the idea was wrong. Several techniques written off as dead ends were revived decades later once compute caught up." }
+      ],
+      "summaryPoints": [
+        "AI has run through two boom-and-bust cycles driven by over-promising",
+        "Deep learning needed algorithms, data and compute - and only got all three around 2012",
+        "The 2017 Transformer paper is the direct ancestor of today's language models"
+      ],
+      "quizQuestionIds": ["q_fund_004", "q_fund_005", "q_fund_006"]
+    },
+    {
+      "id": "les_ai_ml_dl",
+      "moduleId": "mod_ai_intro", "courseId": "crs_ai_foundations", "trackId": "trk_fundamentals",
+      "title": "AI vs Machine Learning vs Deep Learning",
+      "subtitle": "Three words people use interchangeably, and shouldn't",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 5, "order": 3,
+      "blocks": [
+        { "type": "paragraph", "text": "These three terms are nested, not synonymous. Every deep learning system is machine learning; every machine learning system is AI; but the reverse is false in both cases." },
+        { "type": "diagram", "title": "Nested, not equal", "nodes": ["Artificial Intelligence - any system that behaves intelligently", "Machine Learning - systems that learn from data", "Deep Learning - ML using many-layered neural networks"], "caption": "Each ring sits entirely inside the one above it." },
+        { "type": "heading", "text": "Where the boundaries actually fall", "level": 2 },
+        { "type": "table", "headers": ["Example", "Category", "Why"], "rows": [
+          ["A thermostat with an if/else rule", "Not AI", "No judgement, no learning - just a threshold"],
+          ["A chess engine using search and hand-written heuristics", "AI, not ML", "Intelligent behaviour from rules a human wrote"],
+          ["Spam detection trained on labelled emails", "ML", "The rules were learned from examples"],
+          ["Decision tree predicting loan default", "ML, not DL", "Learns from data, but no neural network"],
+          ["Face recognition on your phone", "DL", "A deep convolutional network"],
+          ["ChatGPT-style assistants", "DL", "A very large Transformer network"]
+        ]},
+        { "type": "callout", "style": "TIP", "title": "A quick test", "body": "Ask: did a human write the rule, or did the system find it? If a human wrote it, it is AI but not ML. Then ask: is the model a neural network with many layers? If yes, it is deep learning." },
+        { "type": "question", "questionId": "q_fund_007" },
+        { "type": "paragraph", "text": "Deep learning gets the headlines, but it is not always the right choice. On small tabular datasets - a few thousand rows of customer records - a gradient-boosted tree usually beats a neural network, trains in seconds, and can explain its decisions. Reaching for deep learning by default is one of the most common and most expensive beginner mistakes." }
+      ],
+      "summaryPoints": [
+        "AI contains ML, which contains deep learning",
+        "Rule-based systems are AI but not machine learning",
+        "Deep learning is not automatically better - on small tabular data it usually loses to trees"
+      ],
+      "quizQuestionIds": ["q_fund_007", "q_fund_008", "q_fund_009"]
+    },
+    {
+      "id": "les_types_of_ai",
+      "moduleId": "mod_ai_types", "courseId": "crs_ai_foundations", "trackId": "trk_fundamentals",
+      "title": "Narrow AI, General AI and Superintelligence",
+      "subtitle": "Only one of these exists",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 6, "order": 4,
+      "blocks": [
+        { "type": "paragraph", "text": "AI is usually sorted into three capability tiers. Knowing which tier a claim refers to is the fastest way to tell serious reporting from hype." },
+        { "type": "heading", "text": "Narrow AI (ANI)", "level": 2 },
+        { "type": "paragraph", "text": "A system that performs one task, or a bounded family of tasks, well. Every AI system in commercial use today is narrow AI - including large language models. A model that writes code, answers questions and summarises documents looks general, but it is a very broad narrow system: it cannot learn a genuinely new skill on its own, set its own goals, or transfer understanding to a domain absent from its training." },
+        { "type": "heading", "text": "General AI (AGI)", "level": 2 },
+        { "type": "paragraph", "text": "A hypothetical system matching human flexibility across essentially any intellectual task, including ones it was never trained for. It does not exist. Expert forecasts for its arrival range from a decade to never, and that disagreement is itself informative: nobody has a reliable method for predicting it." },
+        { "type": "heading", "text": "Superintelligence (ASI)", "level": 2 },
+        { "type": "paragraph", "text": "A hypothetical system exceeding the best human performance in every domain, including scientific creativity and social skill. Entirely theoretical, and mostly discussed in the context of safety research." },
+        { "type": "table", "headers": ["Type", "Exists today?", "Example"], "rows": [
+          ["Narrow AI", "Yes - all of it", "Translation, medical imaging, chatbots, recommendations"],
+          ["General AI", "No", "A system that learns any new job the way a person would"],
+          ["Superintelligence", "No", "Purely theoretical"]
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "Reading the news critically", "body": "Headlines routinely describe narrow-AI results in AGI language. When you read that a model 'understands' or 'reasons like a human', check what was actually measured. Usually it is a benchmark score on a fixed task." },
+        { "type": "question", "questionId": "q_fund_010" }
+      ],
+      "summaryPoints": [
+        "Every deployed AI system today is narrow AI, including large language models",
+        "General AI would handle any intellectual task; it does not exist",
+        "Superintelligence is theoretical and mostly a safety-research topic"
+      ],
+      "quizQuestionIds": ["q_fund_010", "q_fund_011", "q_fund_012"]
+    },
+    {
+      "id": "les_ai_terminology",
+      "moduleId": "mod_ai_types", "courseId": "crs_ai_foundations", "trackId": "trk_fundamentals",
+      "title": "The Vocabulary of AI",
+      "subtitle": "Twelve words that unlock every other lesson",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 6, "order": 5,
+      "blocks": [
+        { "type": "paragraph", "text": "AI has a compact core vocabulary. Learn these twelve terms and most technical writing in the field becomes readable." },
+        { "type": "table", "headers": ["Term", "What it means"], "rows": [
+          ["Model", "The trained artefact that makes predictions - the learned rules, saved to a file"],
+          ["Algorithm", "The procedure used to train a model. The recipe, not the cake"],
+          ["Training", "The process of adjusting a model until its predictions match the examples"],
+          ["Inference", "Using a trained model to make a prediction on new data"],
+          ["Parameters", "The numbers inside a model that training adjusts - its learned knowledge"],
+          ["Hyperparameters", "Settings you choose before training, like learning rate"],
+          ["Feature", "One input variable, such as a customer's age"],
+          ["Label", "The correct answer for a training example"],
+          ["Dataset", "The collection of examples used to train, tune and test"],
+          ["Overfitting", "Memorising the training data instead of learning the pattern"],
+          ["Epoch", "One complete pass through the whole training dataset"],
+          ["Weights", "The individual parameter values in a neural network"]
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "Algorithm vs model", "body": "This pair trips up almost everyone. 'Linear regression' is an algorithm. The specific equation it produced for your house-price data - with its particular coefficients - is a model. One algorithm can produce infinitely many models." },
+        { "type": "question", "questionId": "q_fund_013" },
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "Parameters at scale", "body": "A simple linear regression on five features has six parameters. A large language model can have hundreds of billions. The learning principle is identical - only the scale differs." }
+      ],
+      "summaryPoints": [
+        "An algorithm is the training procedure; a model is what that procedure produced",
+        "Parameters are learned during training; hyperparameters are set before it",
+        "Inference is using a trained model, and it is where nearly all real-world cost accumulates"
+      ],
+      "quizQuestionIds": ["q_fund_013", "q_fund_014", "q_fund_015"]
+    },
+    {
+      "id": "les_how_ai_works",
+      "moduleId": "mod_ai_pipeline", "courseId": "crs_ai_in_practice", "trackId": "trk_fundamentals",
+      "title": "How an AI System Actually Works",
+      "subtitle": "End to end, from raw data to a served prediction",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 7, "order": 6,
+      "blocks": [
+        { "type": "paragraph", "text": "Almost every supervised AI system, from a spam filter to a medical imaging tool, follows the same seven stages. Recognising them makes any AI project legible." },
+        { "type": "diagram", "title": "The machine learning lifecycle", "nodes": ["Collect data", "Clean and label", "Split train / validation / test", "Choose an algorithm", "Train the model", "Evaluate on unseen data", "Deploy and monitor"], "caption": "The loop rarely runs once - evaluation usually sends you back to the data." },
+        { "type": "heading", "text": "Where the time actually goes", "level": 2 },
+        { "type": "paragraph", "text": "Practitioners consistently report that collecting and cleaning data consumes the majority of a project's effort. The modelling step - the part that looks like the exciting bit - is often a small fraction of the work. If a course spends all its time on algorithms and none on data, it is not describing the real job." },
+        { "type": "bullets", "ordered": true, "items": [
+          "Collect - gather examples that resemble what the system will meet in production",
+          "Clean and label - fix errors, handle missing values, attach correct answers",
+          "Split - hold out data the model will never see during training",
+          "Choose - pick an algorithm suited to the data size and shape",
+          "Train - let the algorithm adjust parameters to reduce error",
+          "Evaluate - measure performance on the held-out test set only",
+          "Deploy and monitor - serve predictions, and watch for drift as the world changes"
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "The most expensive mistake", "body": "If you evaluate on data the model trained on, your metrics will look excellent and mean nothing. This is called data leakage, and it is the single most common reason a model that scored 99% in development fails in production." },
+        { "type": "question", "questionId": "q_fund_016" },
+        { "type": "paragraph", "text": "The final stage matters more than beginners expect. A model is trained on a snapshot of the past, but the world keeps moving. Customer behaviour shifts, fraud tactics evolve, and a model that was accurate last year quietly degrades. This is called drift, and monitoring for it is part of the job, not an optional extra." }
+      ],
+      "summaryPoints": [
+        "Seven stages: collect, clean, split, choose, train, evaluate, deploy and monitor",
+        "Data work dominates real projects; modelling is a small slice",
+        "Never evaluate on training data, and never stop monitoring after deployment"
+      ],
+      "quizQuestionIds": ["q_fund_016", "q_fund_017", "q_fund_018"]
+    },
+    {
+      "id": "les_training_data",
+      "moduleId": "mod_ai_pipeline", "courseId": "crs_ai_in_practice", "trackId": "trk_fundamentals",
+      "title": "Training Data: The Real Ingredient",
+      "subtitle": "Why data quality beats algorithm choice",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 6, "order": 7,
+      "blocks": [
+        { "type": "paragraph", "text": "A model can only learn patterns that exist in its training data. That single sentence explains most AI failures you will read about." },
+        { "type": "heading", "text": "What makes data good", "level": 2 },
+        { "type": "bullets", "items": [
+          "Representative - it looks like the data the system will actually meet",
+          "Sufficient - enough examples to reveal the pattern rather than the noise",
+          "Accurate - labels are correct, because the model trusts them completely",
+          "Balanced - rare-but-important cases are not drowned out by common ones",
+          "Current - it reflects the world as it is now, not five years ago"
+        ]},
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "A famous failure", "body": "An early medical model appeared to detect pneumonia accurately. It had in fact learned to recognise the portable X-ray machines used for the sickest patients. The model was reading the equipment, not the lungs - and would have failed completely in a hospital with different machines." },
+        { "type": "heading", "text": "The imbalance trap", "level": 2 },
+        { "type": "paragraph", "text": "Suppose 1 in 1,000 transactions is fraudulent. A model that predicts 'not fraud' every single time is 99.9% accurate and completely worthless. This is why accuracy alone is a poor metric, and why you will meet precision and recall later in this course." },
+        { "type": "question", "questionId": "q_fund_019" },
+        { "type": "callout", "style": "KEY_IDEA", "title": "Garbage in, garbage out", "body": "Given a choice between a better algorithm and better data, experienced practitioners take the data almost every time. Doubling your clean, well-labelled examples usually beats switching model architectures." }
+      ],
+      "summaryPoints": [
+        "Models can only learn what is present in their training data",
+        "Representative, accurate and current data matters more than algorithm choice",
+        "On imbalanced data, high accuracy can hide a completely useless model"
+      ],
+      "quizQuestionIds": ["q_fund_019", "q_fund_020", "q_fund_021"]
+    },
+    {
+      "id": "les_models_algorithms",
+      "moduleId": "mod_ai_pipeline", "courseId": "crs_ai_in_practice", "trackId": "trk_fundamentals",
+      "title": "Models, Algorithms and Parameters",
+      "subtitle": "What is actually inside the file",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 5, "order": 8,
+      "blocks": [
+        { "type": "paragraph", "text": "When someone says they 'have a model', they mean a file containing numbers. Those numbers are the parameters, and they encode everything the system learned." },
+        { "type": "code", "language": "python", "caption": "A model is an algorithm plus fitted parameters.", "code": "from sklearn.linear_model import LinearRegression\n\n# LinearRegression is the ALGORITHM - the training procedure.\nalgorithm = LinearRegression()\n\n# Fitting produces the MODEL: the same procedure, now carrying\n# parameters learned from this particular dataset.\nmodel = algorithm.fit(house_features, house_prices)\n\n# These numbers ARE the learned knowledge.\nprint(model.coef_)       # one weight per feature\nprint(model.intercept_)  # the bias term\n\n# Inference: applying those numbers to data never seen before.\nprediction = model.predict(new_house)" },
+        { "type": "paragraph", "text": "Training searches for parameter values that make the model's predictions match the training examples as closely as possible. Nothing more mystical than that is happening - even in a model with hundreds of billions of parameters." },
+        { "type": "callout", "style": "TIP", "title": "Scale changes intuition, not mechanism", "body": "The line above has one weight per feature. GPT-scale models have hundreds of billions of weights arranged in layers. The training principle - nudge the numbers until the errors shrink - is identical." },
+        { "type": "question", "questionId": "q_fund_022" }
+      ],
+      "summaryPoints": [
+        "A saved model is a file of learned parameter values",
+        "Training searches for the parameters that minimise prediction error",
+        "The mechanism is the same from six parameters to six hundred billion"
+      ],
+      "quizQuestionIds": ["q_fund_022", "q_fund_023"]
+    },
+    {
+      "id": "les_inference",
+      "moduleId": "mod_ai_pipeline", "courseId": "crs_ai_in_practice", "trackId": "trk_fundamentals",
+      "title": "Inference: Using the Model",
+      "subtitle": "Where the cost lives",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 5, "order": 9,
+      "blocks": [
+        { "type": "paragraph", "text": "Training happens once, or occasionally. Inference happens every single time a user interacts with the system - and that asymmetry drives most of the engineering decisions in production AI." },
+        { "type": "table", "headers": ["", "Training", "Inference"], "rows": [
+          ["How often", "Once, or periodically", "Millions of times per day"],
+          ["Hardware", "Large GPU clusters", "Whatever serves users cheaply"],
+          ["Latency tolerance", "Days are acceptable", "Milliseconds matter"],
+          ["Total lifetime cost", "A large one-off", "Usually far larger in aggregate"]
+        ]},
+        { "type": "heading", "text": "Why this shapes real products", "level": 2 },
+        { "type": "paragraph", "text": "Because inference dominates cost, teams invest heavily in making models smaller and faster after training: quantisation reduces numeric precision, distillation trains a small model to imitate a large one, and caching avoids recomputing identical requests. A model that is 2% more accurate but 10x slower often loses to the faster one." },
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "On-device inference", "body": "Your phone runs inference constantly - face unlock, keyboard prediction, photo categorisation. These models were trained in data centres but run locally, which is why they are private and work in aeroplane mode." },
+        { "type": "question", "questionId": "q_fund_024" }
+      ],
+      "summaryPoints": [
+        "Training is a one-off cost; inference is a recurring one and usually larger",
+        "Quantisation, distillation and caching exist to make inference affordable",
+        "Speed frequently matters more than the last few points of accuracy"
+      ],
+      "quizQuestionIds": ["q_fund_024", "q_fund_025"]
+    },
+    {
+      "id": "les_ai_applications",
+      "moduleId": "mod_ai_limits", "courseId": "crs_ai_in_practice", "trackId": "trk_fundamentals",
+      "title": "Where AI Is Actually Used",
+      "subtitle": "Beyond the chatbots",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 6, "order": 10,
+      "blocks": [
+        { "type": "paragraph", "text": "Most AI in daily life is invisible. It is not a chat window - it is a ranking, a filter, or a fraud score running silently between you and a service." },
+        { "type": "table", "headers": ["Domain", "Application", "Technique"], "rows": [
+          ["Healthcare", "Detecting tumours in scans", "Computer vision (CNNs)"],
+          ["Finance", "Real-time fraud scoring", "Gradient-boosted trees"],
+          ["Transport", "Lane keeping and obstacle detection", "Vision plus sensor fusion"],
+          ["Agriculture", "Identifying crop disease from photos", "Image classification"],
+          ["Retail", "Demand forecasting and stock planning", "Time-series regression"],
+          ["Communications", "Live translation and captioning", "Sequence models"],
+          ["Energy", "Predicting equipment failure early", "Anomaly detection"],
+          ["Accessibility", "Screen readers describing images", "Multimodal models"]
+        ]},
+        { "type": "callout", "style": "DID_YOU_KNOW", "title": "The quiet workhorse", "body": "Gradient-boosted decision trees - not deep learning - still win most competitions on tabular business data. The most commercially valuable AI is often the least glamorous." },
+        { "type": "question", "questionId": "q_fund_026" },
+        { "type": "paragraph", "text": "Notice the pattern: AI performs best on narrow, well-defined tasks with abundant historical examples and a clear notion of a correct answer. When a task lacks any of those three, results degrade quickly." }
+      ],
+      "summaryPoints": [
+        "Most deployed AI is invisible infrastructure, not conversational",
+        "Technique follows the problem - vision, trees and sequence models each have their place",
+        "AI works best on narrow tasks with plentiful data and a clear correct answer"
+      ],
+      "quizQuestionIds": ["q_fund_026", "q_fund_027"]
+    },
+    {
+      "id": "les_ai_advantages_limits",
+      "moduleId": "mod_ai_limits", "courseId": "crs_ai_in_practice", "trackId": "trk_fundamentals",
+      "title": "Strengths and Limitations",
+      "subtitle": "An honest accounting",
+      "category": "ai_fundamentals", "difficulty": "EASY", "estimatedMinutes": 6, "order": 11,
+      "blocks": [
+        { "type": "heading", "text": "What AI is genuinely good at", "level": 2 },
+        { "type": "bullets", "items": [
+          "Consistency at scale - it does not tire on the ten-thousandth review",
+          "Speed - millisecond decisions on volumes no team could process",
+          "Finding faint patterns across many variables at once",
+          "Availability - continuous operation without breaks",
+          "Personalisation - adapting output per user at a scale humans cannot"
+        ]},
+        { "type": "heading", "text": "Where it reliably struggles", "level": 2 },
+        { "type": "bullets", "items": [
+          "Novel situations genuinely unlike anything in its training data",
+          "Causal reasoning - it finds correlation and cannot distinguish cause",
+          "Explaining itself, particularly for deep networks",
+          "Common sense that no one bothered to write down",
+          "Knowing when it is wrong - confidence and correctness are not the same thing"
+        ]},
+        { "type": "callout", "style": "KEY_IDEA", "title": "The confidence problem", "body": "This is the limitation that causes the most real-world harm. A model will produce a fluent, confident, entirely incorrect answer with exactly the same demeanour as a correct one. It has no internal signal for 'I do not know'." },
+        { "type": "table", "headers": ["Task", "Good fit?", "Why"], "rows": [
+          ["Sorting 100,000 support tickets by topic", "Yes", "Repetitive, plentiful examples, errors are cheap"],
+          ["Deciding who receives a medical treatment alone", "No", "High stakes, needs accountability and causal reasoning"],
+          ["Drafting a first version of a document", "Yes", "A human reviews before anything is final"],
+          ["Predicting an unprecedented market event", "No", "No training examples of something that never happened"]
+        ]},
+        { "type": "question", "questionId": "q_fund_028" }
+      ],
+      "summaryPoints": [
+        "AI excels at consistent, high-volume pattern recognition",
+        "It struggles with novelty, causation, explanation and self-assessment",
+        "Confident wrong answers are the most dangerous failure mode"
+      ],
+      "quizQuestionIds": ["q_fund_028", "q_fund_029", "q_fund_030"]
+    },
+    {
+      "id": "les_ai_ethics_intro",
+      "moduleId": "mod_ai_limits", "courseId": "crs_ai_in_practice", "trackId": "trk_fundamentals",
+      "title": "Why Ethics Is Not Optional",
+      "subtitle": "The questions to ask before you build",
+      "category": "ai_ethics", "difficulty": "EASY", "estimatedMinutes": 6, "order": 12,
+      "blocks": [
+        { "type": "paragraph", "text": "AI ethics is often presented as a compliance exercise bolted on at the end. In practice it is an engineering concern, because most ethical failures in AI are technical failures with human consequences." },
+        { "type": "heading", "text": "Five questions worth asking early", "level": 2 },
+        { "type": "bullets", "ordered": true, "items": [
+          "Whose data trained this, and did they agree to that use?",
+          "Who does this system work worst for, and how would we know?",
+          "What happens when it is wrong - who is harmed, and who is accountable?",
+          "Can a person affected by a decision get a meaningful explanation?",
+          "Is there a human who can override it, and do they have real authority to do so?"
+        ]},
+        { "type": "callout", "style": "WARNING", "title": "Bias is inherited, not invented", "body": "A model trained on historical hiring decisions learns historical hiring bias. It is not being unfair on its own; it is faithfully reproducing a pattern in the data. That is precisely why it is dangerous - the bias arrives wearing the costume of mathematical objectivity." },
+        { "type": "paragraph", "text": "The fifth question is the one most often answered badly. Nominal human oversight - a person who technically can override the system but has thirty seconds per case and no incentive to disagree - is not oversight. It is a liability shield." },
+        { "type": "question", "questionId": "q_ethics_001" },
+        { "type": "paragraph", "text": "The Responsible AI track covers each of these in depth. For now, the habit to build is simply asking the questions before the system is built rather than after it has caused harm." }
+      ],
+      "summaryPoints": [
+        "Most AI ethics failures are technical failures with human consequences",
+        "Models inherit bias from historical data and present it as objectivity",
+        "Oversight is only real if the human has time, information and authority to override"
+      ],
+      "quizQuestionIds": ["q_ethics_001", "q_ethics_002"]
+    }
+  ]
+}
